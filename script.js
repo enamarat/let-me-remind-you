@@ -7,7 +7,7 @@ const addTask = () => {
   const existingListItems = document.querySelectorAll("li");
   let listContent = null;
 
-  const hideWarning = () = > {
+  const hideWarning = () => {
     for (let i = 0; i < existingListItems.length; i++) {
       if (existingListItems[i].textContent.toLowerCase() === "no data is entered!") {
         list.removeChild(existingListItems[i]);
@@ -30,7 +30,7 @@ const addTask = () => {
   console.log(tasks);
       // if warning about empty input was shown earlier, hide it
       hideWarning();
-      
+
       listContent = "<li>";
       listContent += tasks[tasks.length-1];
       listContent += "<input type='checkbox'> </input>";
@@ -49,15 +49,23 @@ document.getElementById("add_task_button").addEventListener("click", addTask);
 
 const deleteTask = () => {
   const tasksToDelete = [];
+  let count = 0;
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
       checkboxes[i].parentNode.parentNode.removeChild(checkboxes[i].parentNode);
-      tasksToDelete.push(checkboxes[i].parentNode.textContent);
-      console.log(tasksToDelete);
+      if (count === 0) {
+        tasks.splice(i, 1);
+      } else {
+        tasks.splice(i-count, 1);
+      }
+      count += 1;
     }
   }
 
+
+console.log(tasks);
 
 }
 
