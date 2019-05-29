@@ -1,31 +1,29 @@
-let tasks = {
-  list: []
-};
+let tasks = null;
 
 const checkLocalStorage = () => {
   if (localStorage.length != 0) {
     let savedValues = JSON.parse(localStorage.getItem('myTasks'));
+console.log(savedValues.list);
+console.log(localStorage.length);
 
-    console.log(savedValues.list);
-
-const list = document.querySelector(".tasks");
-let listContent = null;
-
-
-
+  tasks = savedValues;
+    const list = document.querySelector(".tasks");
+    let listContent = null;
 
     for (let i = 0; i < savedValues.list.length; i++) {
       listContent = "<li>";
       listContent += savedValues.list[i];
-      console.log(savedValues.list[i]);
       listContent += "<input type='checkbox'> </input>";
       listContent += "</li>";
-      console.log(listContent);
-const li = document.createElement('li');
+      const li = document.createElement('li');
       li.innerHTML = listContent;
       list.appendChild(li);
     }
 
+  } else {
+    tasks = {
+      list: []
+    }
   }
 }
 
@@ -82,10 +80,6 @@ document.getElementById("add_task_button").addEventListener("click", addTask);
 
 /////////////////////////////////////////
 const deleteTask = () => {
-  //localStorage.clear();
-  console.log(localStorage);
-
-  const tasksToDelete = [];
   let count = 0;
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
 
@@ -100,7 +94,8 @@ const deleteTask = () => {
       count += 1;
     }
   }
-console.log(tasks);
+  // save updated tasks to local storage
+ localStorage.setItem('myTasks', JSON.stringify(tasks));
 }
 
 document.getElementById("delete").addEventListener("click", deleteTask);
@@ -112,7 +107,8 @@ const selectAll = () => {
   for (let i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = true;
   }
-localStorage.clear();
+
+  //localStorage.clear();
 }
 
 document.getElementById("select-all").addEventListener("click", selectAll);
