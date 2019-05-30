@@ -3,21 +3,20 @@ let tasks = null;
 const checkLocalStorage = () => {
   if (localStorage.length != 0) {
     let savedValues = JSON.parse(localStorage.getItem('myTasks'));
-console.log(savedValues.list);
-console.log(localStorage.length);
-
-  tasks = savedValues;
+    tasks = savedValues;
     const list = document.querySelector(".tasks");
-    let listContent = null;
+    let tableContent = null;
 
     for (let i = 0; i < savedValues.list.length; i++) {
-      listContent = "<li>";
-      listContent += savedValues.list[i];
-      listContent += "<input type='checkbox'> </input>";
-      listContent += "</li>";
-      const li = document.createElement('li');
-      li.innerHTML = listContent;
-      list.appendChild(li);
+      tableContent = "<td>";
+      tableContent += `${savedValues.list[i]}`;
+      tableContent += "</td>";
+      tableContent += "<td>";
+      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "</td>";
+      const row = document.createElement('tr');
+      row.innerHTML = tableContent;
+      list.appendChild(row);
     }
 
   } else {
@@ -33,9 +32,9 @@ checkLocalStorage();
 const addTask = () => {
   const input = document.getElementById("add_task_input");
   const list = document.querySelector(".tasks");
-  const li = document.createElement('li');
-  const existingListItems = document.querySelectorAll("li");
-  let listContent = null;
+
+  const existingListItems = document.querySelectorAll("tr");
+  let tableContent = null;
 
   // function which removes warning if it exists
   const hideWarning = () => {
@@ -46,29 +45,37 @@ const addTask = () => {
     }
   }
 
+  const row = document.createElement('tr');
   // if no data is entered in the input field, show a warning
   if (input.value.length === 0) {
     // prevent warning duplication
     hideWarning();
     // create a warining
-    listContent = "<li class='warning'>";
-    listContent = "No data is entered!";
-    listContent += "</li>";
-    li.innerHTML = listContent;
-    list.appendChild(li);
+    tableContent = "<tr class='warning'>";
+    tableContent += "<td>";
+    tableContent += "No data is entered!";
+    tableContent += "</td>";
+    tableContent += "</tr>";
+    row.innerHTML = tableContent;
+    list.appendChild(row);
   } else {
     tasks.list.push(input.value);
 console.log(tasks);
       // if warning about empty input was shown earlier, hide it
       hideWarning();
 
-      listContent = "<li>";
-      listContent += tasks.list[tasks.list.length-1];
-      listContent += "<input type='checkbox'> </input>";
-      listContent += "</li>";
+      //tableContent = "<tr>";
+      tableContent = "<td>";
+      tableContent += tasks.list[tasks.list.length-1];
+      tableContent += "</td>";
 
-      li.innerHTML = listContent;
-      list.appendChild(li);
+      tableContent += "<td>";
+      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "</td>";
+      //tableContent += "</tr>";
+
+      row.innerHTML = tableContent;
+      list.appendChild(row);
 
       input.value = "";
       // save tasks to local storage
@@ -85,7 +92,7 @@ const deleteTask = () => {
 
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
-      checkboxes[i].parentNode.parentNode.removeChild(checkboxes[i].parentNode);
+      checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
       if (count === 0) {
         tasks.list.splice(i, 1);
       } else {
@@ -107,8 +114,8 @@ const selectAll = () => {
   for (let i = 0; i < checkboxes.length; i++) {
     checkboxes[i].checked = true;
   }
-
-  //localStorage.clear();
 }
 
 document.getElementById("select-all").addEventListener("click", selectAll);
+
+  //localStorage.clear();
