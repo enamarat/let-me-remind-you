@@ -1,5 +1,14 @@
 let tasks = null;
 
+const getDate = () => {
+  let today = new Date();
+  let day = String(today.getDate()).padStart(2, '0');
+  let month = String(today.getMonth() + 1).padStart(2, '0');
+  let year = today.getFullYear();
+  today = `${day}/${month}/${year}`;
+  return today;
+}
+
 const checkLocalStorage = () => {
   if (localStorage.length != 0) {
     let savedValues = JSON.parse(localStorage.getItem('myTasks'));
@@ -9,10 +18,13 @@ const checkLocalStorage = () => {
 
     for (let i = 0; i < savedValues.list.length; i++) {
       tableContent = "<td>";
-      tableContent += `${savedValues.list[i]}`;
+      tableContent += `${savedValues.list[i].name}`;
       tableContent += "</td>";
       tableContent += "<td>";
       tableContent += "<input type='checkbox'> </input>";
+      tableContent += "</td>";
+      tableContent += "<td>";
+      tableContent += `${savedValues.list[i].dateOfCreation}`;
       tableContent += "</td>";
       const row = document.createElement('tr');
       row.innerHTML = tableContent;
@@ -36,6 +48,17 @@ const addTask = () => {
   const existingListItems = document.querySelectorAll("tr");
   let tableContent = null;
 
+  // function which creates a warning
+  const showWarning = () => {
+    tableContent = "<tr class='warning'>";
+    tableContent += "<td>";
+    tableContent += "No data is entered!";
+    tableContent += "</td>";
+    tableContent += "</tr>";
+    row.innerHTML = tableContent;
+    list.appendChild(row);
+  }
+
   // function which removes warning if it exists
   const hideWarning = () => {
     for (let i = 0; i < existingListItems.length; i++) {
@@ -45,34 +68,35 @@ const addTask = () => {
     }
   }
 
+
+
   const row = document.createElement('tr');
   // if no data is entered in the input field, show a warning
   if (input.value.length === 0) {
     // prevent warning duplication
     hideWarning();
-    // create a warining
-    tableContent = "<tr class='warning'>";
-    tableContent += "<td>";
-    tableContent += "No data is entered!";
-    tableContent += "</td>";
-    tableContent += "</tr>";
-    row.innerHTML = tableContent;
-    list.appendChild(row);
+    showWarning();
   } else {
-    tasks.list.push(input.value);
+    tasks.list.push({
+      name: input.value,
+      dateOfCreation: getDate()
+    });
 console.log(tasks);
       // if warning about empty input was shown earlier, hide it
       hideWarning();
 
       //tableContent = "<tr>";
       tableContent = "<td>";
-      tableContent += tasks.list[tasks.list.length-1];
+      tableContent += tasks.list[tasks.list.length-1].name;
       tableContent += "</td>";
 
       tableContent += "<td>";
       tableContent += "<input type='checkbox'> </input>";
       tableContent += "</td>";
-      //tableContent += "</tr>";
+
+      tableContent += "<td>";
+      tableContent += tasks.list[tasks.list.length-1].dateOfCreation;
+      tableContent += "</td>";
 
       row.innerHTML = tableContent;
       list.appendChild(row);

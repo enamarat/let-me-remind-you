@@ -28,3 +28,11 @@
 display: block;
   margin-top: 1rem;
 }
+
+table {
+  text-align: center;
+}
+
+td {
+  padding-right: 0.5rem;
+}
