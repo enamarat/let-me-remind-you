@@ -68,8 +68,6 @@ const addTask = () => {
     }
   }
 
-
-
   const row = document.createElement('tr');
   // if no data is entered in the input field, show a warning
   if (input.value.length === 0) {
@@ -81,7 +79,7 @@ const addTask = () => {
       name: input.value,
       dateOfCreation: getDate()
     });
-console.log(tasks);
+//console.log(tasks);
       // if warning about empty input was shown earlier, hide it
       hideWarning();
 
@@ -125,18 +123,28 @@ const deleteTask = () => {
       count += 1;
     }
   }
-  // save updated tasks to local storage
+  // save updated tasks to the local storage
  localStorage.setItem('myTasks', JSON.stringify(tasks));
 }
 
 document.getElementById("delete").addEventListener("click", deleteTask);
 
-//////////////////////////////////////
+// a function which selects or unselects all checkboxes at once
+let allCheckboxesSelected = false;
+
 const selectAll = () => {
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
-
-  for (let i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = true;
+  // unselect all checkboxes if the "Select all" button is clicked second time
+  if (allCheckboxesSelected === true) {
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = false;
+    }
+    allCheckboxesSelected = false;
+  } else if (allCheckboxesSelected === false) {
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = true;
+    }
+    allCheckboxesSelected = true;
   }
 }
 
