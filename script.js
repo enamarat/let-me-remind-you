@@ -40,7 +40,7 @@ const checkLocalStorage = () => {
 
 checkLocalStorage();
 
-//////////////////////////////////////
+/*************************************************/
 const addTask = () => {
   const input = document.getElementById("add_task_input");
   const list = document.querySelector(".tasks");
@@ -79,7 +79,6 @@ const addTask = () => {
       name: input.value,
       dateOfCreation: getDate()
     });
-//console.log(tasks);
       // if warning about empty input was shown earlier, hide it
       hideWarning();
 
@@ -107,7 +106,7 @@ const addTask = () => {
 
 document.getElementById("add_task_button").addEventListener("click", addTask);
 
-/////////////////////////////////////////
+/*************************************************/
 const deleteTask = () => {
   let count = 0;
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
@@ -129,9 +128,9 @@ const deleteTask = () => {
 
 document.getElementById("delete").addEventListener("click", deleteTask);
 
-// a function which selects or unselects all checkboxes at once
+/*************************************************/
 let allCheckboxesSelected = false;
-
+// a function which selects or unselects all checkboxes at once
 const selectAll = () => {
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
   // unselect all checkboxes if the "Select all" button is clicked second time
@@ -151,3 +150,50 @@ const selectAll = () => {
 document.getElementById("select-all").addEventListener("click", selectAll);
 
   //localStorage.clear();
+
+  /*************************************************/
+  let edited = false;
+
+
+  const editTask = () => {
+    if (edited === false) {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      for (let i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked === true) {
+          let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
+          let taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+
+          taskNameField.textContent = "";
+          const inputField = document.createElement('input');
+          inputField.className = "edited";
+          taskNameField.appendChild(inputField);
+          inputField.value = taskName;
+          edited = true;
+
+        }
+      }
+    }
+
+  }
+
+  document.getElementById("edit").addEventListener("click", editTask);
+
+  /*************************************************/
+  const saveChanges = () => {
+    if (edited === true) {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      for (let i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
+          tasks.list[i].name = checkboxes[i].parentNode.parentNode.firstChild.firstChild.value;
+          // save updated tasks to the local storage
+         localStorage.setItem('myTasks', JSON.stringify(tasks));
+         checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
+        }
+
+      }
+    }
+    edited = false;
+
+  }
+
+  document.getElementById("save").addEventListener("click", saveChanges);
