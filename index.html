@@ -16,9 +16,11 @@
         <button id="select-all"> Select all </button>
         <button id="edit"> Edit </button>
         <button id="save"> Save changes </button>
+        <button id="complete"> Mark as complete </button>
       </div>
+
       <div class="displayList">
-        <h2> Your tasks </h2>
+        <h2> Current tasks </h2>
         <table>
           <thead>
             <tr>
@@ -30,7 +32,23 @@
           <tbody class="tasks">
           </tbody>
         </table>
+
+        <h2 id="completed"> Completed tasks </h2>
+        <table>
+          <thead>
+            <tr>
+              <td> Name </td>
+              <td> Select </td>
+              <td> Date of creation </td>
+              <td> Date of completion </td>
+            </tr>
+          </thead>
+          <tbody class="completedTasks">
+          </tbody>
+        </table>
       </div>
+
+
    </div>
 
     <script src="./script.js"></script>

@@ -1,4 +1,9 @@
-let tasks = null;
+let tasks = {
+  list: []
+}
+let completedTasks = {
+  list: []
+};
 
 const getDate = () => {
   let today = new Date();
@@ -11,6 +16,7 @@ const getDate = () => {
 
 const checkLocalStorage = () => {
   if (localStorage.length != 0) {
+    // current tasks
     let savedValues = JSON.parse(localStorage.getItem('myTasks'));
     tasks = savedValues;
     const list = document.querySelector(".tasks");
@@ -31,11 +37,31 @@ const checkLocalStorage = () => {
       list.appendChild(row);
     }
 
-  } else {
-    tasks = {
-      list: []
+  }
+
+  // completed tasks
+  if (localStorage.getItem("completedTasks") !== null) {
+    let savedValuesCompleted = JSON.parse(localStorage.getItem('completedTasks'));
+    completedTasks = savedValuesCompleted;
+    const listCompleted = document.querySelector(".completedTasks");
+    let tableContentCompleted = null;
+
+    for (let i = 0; i < savedValuesCompleted.list.length; i++) {
+      tableContentCompleted = "<td>";
+      tableContentCompleted += `${savedValuesCompleted.list[i].name}`;
+      tableContentCompleted += "</td>";
+      tableContentCompleted += "<td>";
+      tableContentCompleted += "<input type='checkbox'> </input>";
+      tableContentCompleted += "</td>";
+      tableContentCompleted += "<td>";
+      tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCreation}`;
+      tableContentCompleted += "</td>";
+      const row = document.createElement('tr');
+      row.innerHTML = tableContentCompleted;
+      listCompleted.appendChild(row);
     }
   }
+
 }
 
 checkLocalStorage();
@@ -82,7 +108,6 @@ const addTask = () => {
       // if warning about empty input was shown earlier, hide it
       hideWarning();
 
-      //tableContent = "<tr>";
       tableContent = "<td>";
       tableContent += tasks.list[tasks.list.length-1].name;
       tableContent += "</td>";
@@ -149,8 +174,6 @@ const selectAll = () => {
 
 document.getElementById("select-all").addEventListener("click", selectAll);
 
-  //localStorage.clear();
-
   /*************************************************/
   let edited = false;
 
@@ -197,3 +220,62 @@ document.getElementById("select-all").addEventListener("click", selectAll);
   }
 
   document.getElementById("save").addEventListener("click", saveChanges);
+
+  /*************************************************/
+  const markComplete = () => {
+
+    let count = 0;
+    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked === true) {
+        checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
+        if (count === 0) {
+          completedTasks.list.push(tasks.list[i]);
+          tasks.list.splice(i, 1);
+        } else {
+          completedTasks.list.push(tasks.list[i-count]);
+          tasks.list.splice(i-count, 1);
+        }
+        count += 1;
+      }
+  }
+  // save updated tasks to the local storage
+ localStorage.setItem('myTasks', JSON.stringify(tasks));
+ // save completed tasks to the local storage
+ localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+
+ const list = document.querySelector(".completedTasks");
+ let tableContent = null;
+
+ let rows = document.querySelectorAll('.completedTasks tr');
+ console.log(rows);
+  for (let i = 0; i < rows.length; i++) {
+    list.removeChild(rows[i]);
+  }
+
+  for (let i = 0; i < completedTasks.list.length; i++) {
+    const row = document.createElement('tr');
+    tableContent = "<td>";
+  //  tableContent += completedTasks.list[completedTasks.list.length-1].name;
+    tableContent += completedTasks.list[i].name;
+    tableContent += "</td>";
+
+    tableContent += "<td>";
+    tableContent += "<input type='checkbox'> </input>";
+    tableContent += "</td>";
+
+    tableContent += "<td>";
+  //  tableContent += completedTasks.list[completedTasks.list.length-1].dateOfCreation;
+    tableContent += completedTasks.list[i].dateOfCreation;
+    tableContent += "</td>";
+
+    row.innerHTML = tableContent;
+    list.appendChild(row);
+    }
+
+    //localStorage.clear();
+}
+
+  document.getElementById("complete").addEventListener("click", markComplete);

@@ -19,15 +19,24 @@
   align-items: center;
 }
 
+#add_task_button {
+  margin-top: 1rem;
+}
+
 #delete {
   display: block;
   margin-top: 1rem;
 }
 
 #select-all {
-display: block;
+  display: block;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+#complete {
+  display: block;
+  margin-top: 1rem;
 }
 
 table {
@@ -36,4 +45,8 @@ table {
 
 td {
   padding-right: 0.5rem;
+}
+
+#completed {
+  margin-top: 1rem;
 }
