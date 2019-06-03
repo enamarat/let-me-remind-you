@@ -141,6 +141,7 @@ const deleteTask = () => {
 
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
+console.log(checkboxes[i].parentNode.parentNode.lastChild);
       checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
       if (count === 0) {
         tasks.list.splice(i, 1);
@@ -179,8 +180,6 @@ document.getElementById("select-all").addEventListener("click", selectAll);
 
   /*************************************************/
   let edited = false;
-
-
   const editTask = () => {
     if (edited === false) {
       const checkboxes = document.querySelectorAll("input[type='checkbox']");
@@ -215,18 +214,15 @@ document.getElementById("select-all").addEventListener("click", selectAll);
          localStorage.setItem('myTasks', JSON.stringify(tasks));
          checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
         }
-
       }
     }
     edited = false;
-
   }
 
   document.getElementById("save").addEventListener("click", saveChanges);
 
   /*************************************************/
   const markComplete = () => {
-
     let count = 0;
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
 
@@ -242,47 +238,50 @@ document.getElementById("select-all").addEventListener("click", selectAll);
           completedTasks.list.push(tasks.list[i-count]);
           tasks.list.splice(i-count, 1);
         }
-      completedTasks.list[count].dateOfCompletion = getDate();
         count += 1;
       }
   }
-  // save updated tasks to the local storage
- localStorage.setItem('myTasks', JSON.stringify(tasks));
- // save completed tasks to the local storage
- localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+    // save updated tasks to the local storage
+   localStorage.setItem('myTasks', JSON.stringify(tasks));
+   // save completed tasks to the local storage
+   localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
 
- const list = document.querySelector(".completedTasks");
- let tableContent = null;
+   const list = document.querySelector(".completedTasks");
+   let tableContent = null;
 
- let rows = document.querySelectorAll('.completedTasks tr');
- for (let i = 0; i < rows.length; i++) {
-    list.removeChild(rows[i]);
-  }
-
-  for (let i = 0; i < completedTasks.list.length; i++) {
-    const row = document.createElement('tr');
-
-    tableContent = "<td>";
-    tableContent += completedTasks.list[i].name;
-    tableContent += "</td>";
-
-    tableContent += "<td>";
-    tableContent += "<input type='checkbox'> </input>";
-    tableContent += "</td>";
-
-    tableContent += "<td>";
-    tableContent += completedTasks.list[i].dateOfCreation;
-    tableContent += "</td>";
-
-    tableContent += "<td>";
-    tableContent += completedTasks.list[i].dateOfCompletion;
-    tableContent += "</td>";
-
-    row.innerHTML = tableContent;
-    list.appendChild(row);
+   let rows = document.querySelectorAll('.completedTasks tr');
+   for (let i = 0; i < rows.length; i++) {
+      list.removeChild(rows[i]);
     }
 
-    //localStorage.clear();
+    for (let i = 0; i < completedTasks.list.length; i++) {
+      const row = document.createElement('tr');
+      completedTasks.list[i].dateOfCompletion = getDate();
+
+      tableContent = "<td>";
+      tableContent += completedTasks.list[i].name;
+      tableContent += "</td>";
+
+      tableContent += "<td>";
+      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "</td>";
+
+      tableContent += "<td>";
+      tableContent += completedTasks.list[i].dateOfCreation;
+      tableContent += "</td>";
+
+      tableContent += "<td class='completion'>";
+      tableContent += completedTasks.list[i].dateOfCompletion;
+      tableContent += "</td>";
+
+      row.innerHTML = tableContent;
+      list.appendChild(row);
+      }
+
+      // save completed tasks to the local storage
+      localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+
+      //localStorage.clear();
 }
 
   document.getElementById("complete").addEventListener("click", markComplete);
