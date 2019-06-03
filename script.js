@@ -56,6 +56,9 @@ const checkLocalStorage = () => {
       tableContentCompleted += "<td>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCreation}`;
       tableContentCompleted += "</td>";
+      tableContentCompleted += "<td>";
+      tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCompletion}`;
+      tableContentCompleted += "</td>";
       const row = document.createElement('tr');
       row.innerHTML = tableContentCompleted;
       listCompleted.appendChild(row);
@@ -227,7 +230,8 @@ document.getElementById("select-all").addEventListener("click", selectAll);
     let count = 0;
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
 
-
+    /* remove selected tasks from "tasks" array and paste them
+     into "completedTasks" array */
     for (let i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked === true) {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
@@ -238,6 +242,7 @@ document.getElementById("select-all").addEventListener("click", selectAll);
           completedTasks.list.push(tasks.list[i-count]);
           tasks.list.splice(i-count, 1);
         }
+      completedTasks.list[count].dateOfCompletion = getDate();
         count += 1;
       }
   }
@@ -250,15 +255,14 @@ document.getElementById("select-all").addEventListener("click", selectAll);
  let tableContent = null;
 
  let rows = document.querySelectorAll('.completedTasks tr');
- console.log(rows);
-  for (let i = 0; i < rows.length; i++) {
+ for (let i = 0; i < rows.length; i++) {
     list.removeChild(rows[i]);
   }
 
   for (let i = 0; i < completedTasks.list.length; i++) {
     const row = document.createElement('tr');
+
     tableContent = "<td>";
-  //  tableContent += completedTasks.list[completedTasks.list.length-1].name;
     tableContent += completedTasks.list[i].name;
     tableContent += "</td>";
 
@@ -267,8 +271,11 @@ document.getElementById("select-all").addEventListener("click", selectAll);
     tableContent += "</td>";
 
     tableContent += "<td>";
-  //  tableContent += completedTasks.list[completedTasks.list.length-1].dateOfCreation;
     tableContent += completedTasks.list[i].dateOfCreation;
+    tableContent += "</td>";
+
+    tableContent += "<td>";
+    tableContent += completedTasks.list[i].dateOfCompletion;
     tableContent += "</td>";
 
     row.innerHTML = tableContent;
