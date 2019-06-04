@@ -16,6 +16,7 @@ const getDate = () => {
 
 /******************* Check local storage ***********************/
 const checkLocalStorage = () => {
+  //localStorage.clear();
   if (localStorage.length != 0) {
     // current tasks
     let savedValues = JSON.parse(localStorage.getItem('myTasks'));
@@ -243,9 +244,11 @@ document.getElementById("select-all").addEventListener("click", selectAll);
       if (checkboxes[i].checked === true) {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
+          tasks.list[i].dateOfCompletion = getDate();
           completedTasks.list.push(tasks.list[i]);
           tasks.list.splice(i, 1);
         } else {
+          tasks.list[i-count].dateOfCompletion = getDate();
           completedTasks.list.push(tasks.list[i-count]);
           tasks.list.splice(i-count, 1);
         }
@@ -265,9 +268,10 @@ document.getElementById("select-all").addEventListener("click", selectAll);
       list.removeChild(rows[i]);
     }
 
+
     for (let i = 0; i < completedTasks.list.length; i++) {
       const row = document.createElement('tr');
-      completedTasks.list[i].dateOfCompletion = getDate();
+      //completedTasks.list[i].dateOfCompletion = getDate();
 
       tableContent = "<td>";
       tableContent += completedTasks.list[i].name;
