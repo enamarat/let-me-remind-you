@@ -251,7 +251,7 @@ document.getElementById("select-all").addEventListener("click", selectAll);
     /* remove selected tasks from "tasks" array and paste them
      into "completedTasks" array */
     for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked === true) {
+      if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
           tasks.list[i].dateOfCompletion = getDate();
@@ -263,6 +263,9 @@ document.getElementById("select-all").addEventListener("click", selectAll);
           tasks.list.splice(i-count, 1);
         }
         count += 1;
+      }
+      if (checkboxes[i].className === "completedCheckbox") {
+        alert('The task is already completed!');
       }
   }
     // save updated tasks to the local storage
