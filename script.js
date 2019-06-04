@@ -194,10 +194,13 @@ document.getElementById("select-all").addEventListener("click", selectAll);
   /********************** Edit tasks **********************/
   let edited = false;
   const editTask = () => {
+    // if any warning was shown earlier, hide it
+    hideWarning();
+
     if (edited === false) {
       const checkboxes = document.querySelectorAll("input[type='checkbox']");
       for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked === true) {
+        if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
           let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
           let taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
 
@@ -207,7 +210,9 @@ document.getElementById("select-all").addEventListener("click", selectAll);
           taskNameField.appendChild(inputField);
           inputField.value = taskName;
           edited = true;
-
+        }
+        if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
+          showWarning('Completed tasks cannot be edited!');
         }
       }
     }
@@ -218,6 +223,9 @@ document.getElementById("select-all").addEventListener("click", selectAll);
 
   /******************* Save edited tasks to local storage *******************/
   const saveChanges = () => {
+    // if any warning was shown earlier, hide it
+    hideWarning();
+    
     if (edited === true) {
       const checkboxes = document.querySelectorAll("input[type='checkbox']");
       for (let i = 0; i < checkboxes.length; i++) {
@@ -259,7 +267,6 @@ document.getElementById("select-all").addEventListener("click", selectAll);
         count += 1;
       }
       if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
-        console.log('Hey!');
         showWarning('The task is already completed!');
       }
   }
