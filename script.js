@@ -5,6 +5,8 @@ let completedTasks = {
   list: []
 };
 
+const messageDiv = document.getElementById('message');
+
 const getDate = () => {
   let today = new Date();
   let day = String(today.getDate()).padStart(2, '0');
@@ -71,40 +73,29 @@ const checkLocalStorage = () => {
 
 checkLocalStorage();
 
+/*********** Show andd hide warnings *************/
+// function which creates a warning
+const showWarning = (message) => {
+  messageDiv.innerHTML = `<h2 class="warning"> ${message} </h2>`;;
+}
+
+// function which removes warning if it exists
+const hideWarning = () => {
+  if (messageDiv.getElementsByTagName('h2').length > 0) {
+    messageDiv.innerHTML = "";
+  }
+}
+
 /**************** Add tasks *********************/
 const addTask = () => {
   const input = document.getElementById("add_task_input");
   const list = document.querySelector(".tasks");
-
-  const existingListItems = document.querySelectorAll("tr");
   let tableContent = null;
 
-  // function which creates a warning
-  const showWarning = () => {
-    tableContent = "<tr class='warning'>";
-    tableContent += "<td>";
-    tableContent += "No data is entered!";
-    tableContent += "</td>";
-    tableContent += "</tr>";
-    row.innerHTML = tableContent;
-    list.appendChild(row);
-  }
-
-  // function which removes warning if it exists
-  const hideWarning = () => {
-    for (let i = 0; i < existingListItems.length; i++) {
-      if (existingListItems[i].textContent.toLowerCase() === "no data is entered!") {
-        list.removeChild(existingListItems[i]);
-      }
-    }
-  }
-
   const row = document.createElement('tr');
-  // if no data is entered in the input field, show a warning
+  // if no data are entered in the input field, show a warning
   if (input.value.length === 0) {
-    // prevent warning duplication
-    hideWarning();
-    showWarning();
+    showWarning('No data are provided for the name of the task!');
   } else {
     tasks.list.push({
       name: input.value,
@@ -245,6 +236,9 @@ document.getElementById("select-all").addEventListener("click", selectAll);
 
   /******************** Mark tasks as complete **********************/
   const markComplete = () => {
+    // if any warning was shown earlier, hide it
+    hideWarning();
+
     let count = 0;
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
 
@@ -264,8 +258,9 @@ document.getElementById("select-all").addEventListener("click", selectAll);
         }
         count += 1;
       }
-      if (checkboxes[i].className === "completedCheckbox") {
-        alert('The task is already completed!');
+      if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
+        console.log('Hey!');
+        showWarning('The task is already completed!');
       }
   }
     // save updated tasks to the local storage

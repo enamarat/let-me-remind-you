@@ -4,6 +4,11 @@
 
 .wrap {
   display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
   justify-content: space-between;
 }
 
@@ -49,4 +54,13 @@ td {
 
 #completed {
   margin-top: 1rem;
+}
+
+#message {
+  width: 100%;
+  text-align: center;
+}
+
+.warning {
+  color: red;
 }

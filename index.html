@@ -9,46 +9,51 @@
   <body>
     <h1> Don't forget! </h1>
     <div class="wrap">
-      <div class="panel">
-        <input id="add_task_input" placeholder="Add your task here"> </input>
-        <button id="add_task_button"> Add to list </button>
-        <button id="delete"> Delete </button>
-        <button id="select-all"> Select all </button>
-        <button id="edit"> Edit </button>
-        <button id="save"> Save changes </button>
-        <button id="complete"> Mark as complete </button>
+
+      <div id="message">
       </div>
 
-      <div class="displayList">
-        <h2> Current tasks </h2>
-        <table>
-          <thead>
-            <tr>
-              <td> Name </td>
-              <td> Select </td>
-              <td> Created </td>
-            </tr>
-          </thead>
-          <tbody class="tasks">
-          </tbody>
-        </table>
+      <div class="container">
+        <div class="panel">
+          <input id="add_task_input" placeholder="Add your task here"> </input>
+          <button id="add_task_button"> Add to list </button>
+          <button id="delete"> Delete </button>
+          <button id="select-all"> Select all </button>
+          <button id="edit"> Edit </button>
+          <button id="save"> Save changes </button>
+          <button id="complete"> Mark as complete </button>
+        </div>
 
-        <h2 id="completed"> Completed tasks </h2>
-        <table>
-          <thead>
-            <tr>
-              <td> Name </td>
-              <td> Select </td>
-              <td> Created </td>
-              <td> Completed </td>
-            </tr>
-          </thead>
-          <tbody class="completedTasks">
-          </tbody>
-        </table>
-      </div>
+        <div class="displayList">
+          <h2> Current tasks </h2>
+          <table>
+            <thead>
+              <tr>
+                <td> Name </td>
+                <td> Select </td>
+                <td> Created </td>
+              </tr>
+            </thead>
+            <tbody class="tasks">
+            </tbody>
+          </table>
 
+          <h2 id="completed"> Completed tasks </h2>
+          <table>
+            <thead>
+              <tr>
+                <td> Name </td>
+                <td> Select </td>
+                <td> Created </td>
+                <td> Completed </td>
+              </tr>
+            </thead>
+            <tbody class="completedTasks">
+            </tbody>
+          </table>
+        </div>
 
+     </div>
    </div>
 
     <script src="./script.js"></script>
