@@ -53,7 +53,7 @@ const checkLocalStorage = () => {
       tableContentCompleted += `${savedValuesCompleted.list[i].name}`;
       tableContentCompleted += "</td>";
       tableContentCompleted += "<td>";
-      tableContentCompleted += "<input type='checkbox'> </input>";
+      tableContentCompleted += "<input type='checkbox' class='completedCheckbox'> </input>";
       tableContentCompleted += "</td>";
       tableContentCompleted += "<td>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCreation}`;
@@ -139,18 +139,13 @@ document.getElementById("add_task_button").addEventListener("click", addTask);
 /**************** Delete tasks *****************/
 const deleteTask = () => {
   let count = 0;
+
+  // delete current tasks
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
-      checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
-      if (checkboxes[i].parentNode.parentNode.lastChild.className === "completion") {
-        if (count === 0) {
-          completedTasks.list.splice(i, 1);
-        } else {
-          completedTasks.list.splice(i-count, 1);
-        }
-        count += 1;
-      } else {
+      if (checkboxes[i].parentNode.parentNode.lastChild.className !== "completion") {
+        checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
           tasks.list.splice(i, 1);
         } else {
@@ -162,8 +157,23 @@ const deleteTask = () => {
   }
   // save updated tasks to the local storage
  localStorage.setItem('myTasks', JSON.stringify(tasks));
- // save updated completed tasks to the local storage
- localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+
+  // delete completed tasks
+  const completedCheckboxes = document.querySelectorAll(".completedCheckbox");
+  for (let j = 0; j < completedCheckboxes.length; j++) {
+    if (completedCheckboxes[j].checked === true) {
+      completedCheckboxes[j].parentNode.parentNode.parentNode.removeChild(completedCheckboxes[j].parentNode.parentNode);
+      if (count === 0) {
+        completedTasks.list.splice(j, 1);
+      } else {
+        completedTasks.list.splice(j-count, 1);
+      }
+      count += 1;
+    }
+  }
+  // save updated completed tasks to the local storage
+  localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+
 }
 
 document.getElementById("delete").addEventListener("click", deleteTask);
@@ -268,17 +278,15 @@ document.getElementById("select-all").addEventListener("click", selectAll);
       list.removeChild(rows[i]);
     }
 
-
     for (let i = 0; i < completedTasks.list.length; i++) {
       const row = document.createElement('tr');
-      //completedTasks.list[i].dateOfCompletion = getDate();
 
       tableContent = "<td>";
       tableContent += completedTasks.list[i].name;
       tableContent += "</td>";
 
       tableContent += "<td>";
-      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "<input type='checkbox' class='completedCheckbox'> </input>";
       tableContent += "</td>";
 
       tableContent += "<td>";
@@ -293,10 +301,6 @@ document.getElementById("select-all").addEventListener("click", selectAll);
       list.appendChild(row);
       }
 
-      // save completed tasks to the local storage
-      localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-
-      //localStorage.clear();
 }
 
   document.getElementById("complete").addEventListener("click", markComplete);
