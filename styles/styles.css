@@ -24,24 +24,9 @@
   align-items: center;
 }
 
-#add_task_button {
-  margin-top: 1rem;
-}
-
-#delete {
+button {
   display: block;
-  margin-top: 1rem;
-}
-
-#select-all {
-  display: block;
-  margin-top: 1rem;
   margin-bottom: 1rem;
-}
-
-#complete {
-  display: block;
-  margin-top: 1rem;
 }
 
 table {

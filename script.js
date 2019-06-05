@@ -73,7 +73,7 @@ const checkLocalStorage = () => {
 
 checkLocalStorage();
 
-/*********** Show andd hide warnings *************/
+/*********** Show and hide warnings *************/
 // function which creates a warning
 const showWarning = (message) => {
   messageDiv.innerHTML = `<h2 class="warning"> ${message} </h2>`;;
@@ -174,22 +174,50 @@ let allCheckboxesSelected = false;
 // a function which selects or unselects all checkboxes at once
 const selectAll = () => {
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
-  // unselect all checkboxes if the "Select all" button is clicked second time
-  if (allCheckboxesSelected === true) {
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = false;
-    }
-    allCheckboxesSelected = false;
-  } else if (allCheckboxesSelected === false) {
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = true;
-    }
-    allCheckboxesSelected = true;
-  }
+
+      // unselect all checkboxes if the "Select all" button is clicked second time
+      if (allCheckboxesSelected === true) {
+        for (let i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].className !== "completedCheckbox") {
+          checkboxes[i].checked = false;
+          }
+        }
+        allCheckboxesSelected = false;
+      } else if (allCheckboxesSelected === false) {
+        for (let i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].className !== "completedCheckbox") {
+          checkboxes[i].checked = true;
+          }
+        }
+        allCheckboxesSelected = true;
+      }
   //localStorage.clear();
 }
 
-document.getElementById("select-all").addEventListener("click", selectAll);
+document.getElementById("select-all-current").addEventListener("click", selectAll);
+document.getElementById("select-all-completed").addEventListener("click", () => {
+
+  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+      // unselect all checkboxes if the "Select all" button is clicked second time
+      if (allCheckboxesSelected === true) {
+        for (let i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].className === "completedCheckbox") {
+          checkboxes[i].checked = false;
+          }
+        }
+        allCheckboxesSelected = false;
+      } else if (allCheckboxesSelected === false) {
+        for (let i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].className === "completedCheckbox") {
+          checkboxes[i].checked = true;
+          }
+        }
+        allCheckboxesSelected = true;
+      }
+
+
+});
 
   /********************** Edit tasks **********************/
   let edited = false;
@@ -225,7 +253,7 @@ document.getElementById("select-all").addEventListener("click", selectAll);
   const saveChanges = () => {
     // if any warning was shown earlier, hide it
     hideWarning();
-    
+
     if (edited === true) {
       const checkboxes = document.querySelectorAll("input[type='checkbox']");
       for (let i = 0; i < checkboxes.length; i++) {
