@@ -19,6 +19,7 @@ body {
 .panel {
   text-align: left;
   width: 30%;
+  background-color: black;
 }
 
 
@@ -30,20 +31,19 @@ body {
 }
 
 button {
-  display: block;
   margin-top: 1rem;
+  padding: 0.5rem;
   color: white;
   background-color: black;
   border-radius: 20%;
 }
 
 button:hover {
-  color: black;
-  background-color: gold;
+  color: yellow;
 }
 
 button:active {
-  background-color: pink;
+  background-color: grey;
 }
 
 table {
