@@ -6,6 +6,8 @@ let completedTasks = {
 };
 
 const messageDiv = document.getElementById('message');
+const tableOfCompletedTasks = document.querySelector('.completed');
+let tableOfCompletedTasksStatus = null;
 
 const getDate = () => {
   let today = new Date();
@@ -31,7 +33,7 @@ const checkLocalStorage = () => {
       tableContent += `${savedValues.list[i].name}`;
       tableContent += "</td>";
       tableContent += "<td>";
-      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "<input type='checkbox' class='current'> </input>";
       tableContent += "</td>";
       tableContent += "<td>";
       tableContent += `${savedValues.list[i].dateOfCreation}`;
@@ -66,6 +68,15 @@ const checkLocalStorage = () => {
       const row = document.createElement('tr');
       row.innerHTML = tableContentCompleted;
       listCompleted.appendChild(row);
+    }
+
+    // Hide table of completed tasks if there are no completed tasks
+    if (savedValuesCompleted.list.length === 0) {
+      tableOfCompletedTasks.style.display = "none";
+      tableOfCompletedTasksStatus = false;
+    } else {
+      tableOfCompletedTasks.style.display = "block";
+      tableOfCompletedTasksStatus = true;
     }
   }
 
@@ -109,7 +120,7 @@ const addTask = () => {
       tableContent += "</td>";
 
       tableContent += "<td>";
-      tableContent += "<input type='checkbox'> </input>";
+      tableContent += "<input type='checkbox' class='current'> </input>";
       tableContent += "</td>";
 
       tableContent += "<td>";
@@ -165,175 +176,165 @@ const deleteTask = () => {
   // save updated completed tasks to the local storage
   localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
 
+  // if after deletion there are no more completed tasks hide the table of completed tasks
+  if (completedTasks.list.length === 0) {
+    tableOfCompletedTasks.style.display = "none";
+    tableOfCompletedTasksStatus = false;
+  }
 }
 
 document.getElementById("delete").addEventListener("click", deleteTask);
 
 /********************* Select all tasks **********************/
 let allCheckboxesSelected = false;
-// a function which selects or unselects all checkboxes at once
-const selectAll = () => {
-  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+const checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
+const checkboxesCurrent = document.querySelectorAll(".current");
 
-      // unselect all checkboxes if the "Select all" button is clicked second time
-      if (allCheckboxesSelected === true) {
-        for (let i = 0; i < checkboxes.length; i++) {
-          if (checkboxes[i].className !== "completedCheckbox") {
-          checkboxes[i].checked = false;
-          }
-        }
-        allCheckboxesSelected = false;
-      } else if (allCheckboxesSelected === false) {
-        for (let i = 0; i < checkboxes.length; i++) {
-          if (checkboxes[i].className !== "completedCheckbox") {
-          checkboxes[i].checked = true;
-          }
-        }
-        allCheckboxesSelected = true;
-      }
-  //localStorage.clear();
+// a function which selects or unselects all checkboxes at once
+const selectAll = (checkboxesClass) => {
+// unselect all checkboxes if the "Select all" button is clicked second time
+  if (allCheckboxesSelected === true) {
+    for (let i = 0; i < checkboxesClass.length; i++) {
+    checkboxesClass[i].checked = false;
+    }
+    allCheckboxesSelected = false;
+  } else if (allCheckboxesSelected === false) {
+    for (let i = 0; i < checkboxesClass.length; i++) {
+    checkboxesClass[i].checked = true;
+    }
+    allCheckboxesSelected = true;
+  }
+//localStorage.clear();
 }
 
-document.getElementById("select-all-current").addEventListener("click", selectAll);
+document.getElementById("select-all-current").addEventListener("click", () => {
+  selectAll(checkboxesCurrent);
+});
 document.getElementById("select-all-completed").addEventListener("click", () => {
-
-  const checkboxes = document.querySelectorAll("input[type='checkbox']");
-
-      // unselect all checkboxes if the "Select all" button is clicked second time
-      if (allCheckboxesSelected === true) {
-        for (let i = 0; i < checkboxes.length; i++) {
-          if (checkboxes[i].className === "completedCheckbox") {
-          checkboxes[i].checked = false;
-          }
-        }
-        allCheckboxesSelected = false;
-      } else if (allCheckboxesSelected === false) {
-        for (let i = 0; i < checkboxes.length; i++) {
-          if (checkboxes[i].className === "completedCheckbox") {
-          checkboxes[i].checked = true;
-          }
-        }
-        allCheckboxesSelected = true;
-      }
-
-
+  selectAll(checkboxesCompleted);
 });
 
-  /********************** Edit tasks **********************/
-  let edited = false;
-  const editTask = () => {
-    // if any warning was shown earlier, hide it
-    hideWarning();
+/********************** Edit tasks **********************/
+let edited = false;
+const editTask = () => {
+  // if any warning was shown earlier, hide it
+  hideWarning();
 
-    if (edited === false) {
-      const checkboxes = document.querySelectorAll("input[type='checkbox']");
-      for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
-          let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
-          let taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
-
-          taskNameField.textContent = "";
-          const inputField = document.createElement('input');
-          inputField.className = "edited";
-          taskNameField.appendChild(inputField);
-          inputField.value = taskName;
-          edited = true;
-        }
-        if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
-          showWarning('Completed tasks cannot be edited!');
-        }
-      }
-    }
-
-  }
-
-  document.getElementById("edit").addEventListener("click", editTask);
-
-  /******************* Save edited tasks to local storage *******************/
-  const saveChanges = () => {
-    // if any warning was shown earlier, hide it
-    hideWarning();
-
-    if (edited === true) {
-      const checkboxes = document.querySelectorAll("input[type='checkbox']");
-      for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
-          tasks.list[i].name = checkboxes[i].parentNode.parentNode.firstChild.firstChild.value;
-          // save updated tasks to the local storage
-         localStorage.setItem('myTasks', JSON.stringify(tasks));
-         checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
-        }
-      }
-    }
-    edited = false;
-  }
-
-  document.getElementById("save").addEventListener("click", saveChanges);
-
-  /******************** Mark tasks as complete **********************/
-  const markComplete = () => {
-    // if any warning was shown earlier, hide it
-    hideWarning();
-
-    let count = 0;
+  if (edited === false) {
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
-
-    /* remove selected tasks from "tasks" array and paste them
-     into "completedTasks" array */
     for (let i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
-        checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
-        if (count === 0) {
-          tasks.list[i].dateOfCompletion = getDate();
-          completedTasks.list.push(tasks.list[i]);
-          tasks.list.splice(i, 1);
-        } else {
-          tasks.list[i-count].dateOfCompletion = getDate();
-          completedTasks.list.push(tasks.list[i-count]);
-          tasks.list.splice(i-count, 1);
-        }
-        count += 1;
+        let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
+        let taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+
+        taskNameField.textContent = "";
+        const inputField = document.createElement('input');
+        inputField.className = "edited";
+        taskNameField.appendChild(inputField);
+        inputField.value = taskName;
+        edited = true;
       }
       if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
-        showWarning('The task is already completed!');
+        showWarning('Completed tasks cannot be edited!');
       }
-  }
-    // save updated tasks to the local storage
-   localStorage.setItem('myTasks', JSON.stringify(tasks));
-   // save completed tasks to the local storage
-   localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-
-   const list = document.querySelector(".completedTasks");
-   let tableContent = null;
-
-   let rows = document.querySelectorAll('.completedTasks tr');
-   for (let i = 0; i < rows.length; i++) {
-      list.removeChild(rows[i]);
     }
-
-    for (let i = 0; i < completedTasks.list.length; i++) {
-      const row = document.createElement('tr');
-
-      tableContent = "<td>";
-      tableContent += completedTasks.list[i].name;
-      tableContent += "</td>";
-
-      tableContent += "<td>";
-      tableContent += "<input type='checkbox' class='completedCheckbox'> </input>";
-      tableContent += "</td>";
-
-      tableContent += "<td>";
-      tableContent += completedTasks.list[i].dateOfCreation;
-      tableContent += "</td>";
-
-      tableContent += "<td class='completion'>";
-      tableContent += completedTasks.list[i].dateOfCompletion;
-      tableContent += "</td>";
-
-      row.innerHTML = tableContent;
-      list.appendChild(row);
-      }
-
+  }
 }
 
-  document.getElementById("complete").addEventListener("click", markComplete);
+document.getElementById("edit").addEventListener("click", editTask);
+
+  /******************* Save edited tasks to the local storage *******************/
+const saveChanges = () => {
+  // if any warning was shown earlier, hide it
+  hideWarning();
+
+  if (edited === true) {
+    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
+        tasks.list[i].name = checkboxes[i].parentNode.parentNode.firstChild.firstChild.value;
+        // save updated tasks to the local storage
+        localStorage.setItem('myTasks', JSON.stringify(tasks));
+        checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
+      }
+    }
+  }
+  edited = false;
+}
+
+document.getElementById("save").addEventListener("click", saveChanges);
+
+/******************** Mark tasks as complete **********************/
+const markComplete = () => {
+  // if any warning was shown earlier, hide it
+  hideWarning();
+
+  let count = 0;
+  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+  /* remove selected tasks from "tasks" array and paste them
+    into "completedTasks" array */
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
+      checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
+      if (count === 0) {
+        tasks.list[i].dateOfCompletion = getDate();
+        completedTasks.list.push(tasks.list[i]);
+        tasks.list.splice(i, 1);
+      } else {
+        tasks.list[i-count].dateOfCompletion = getDate();
+        completedTasks.list.push(tasks.list[i-count]);
+        tasks.list.splice(i-count, 1);
+      }
+      count += 1;
+    }
+    if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
+      showWarning('The task is already completed!');
+    }
+}
+  // save updated tasks to the local storage
+  localStorage.setItem('myTasks', JSON.stringify(tasks));
+  // save completed tasks to the local storage
+  localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+
+  /* update table of completed tasks by removing all rows displayed previously
+  and displaying them again according to a new array of completed tasks */
+  const list = document.querySelector(".completedTasks");
+  let tableContent = null;
+
+  let rows = document.querySelectorAll('.completedTasks tr');
+  for (let i = 0; i < rows.length; i++) {
+    list.removeChild(rows[i]);
+  }
+
+  for (let i = 0; i < completedTasks.list.length; i++) {
+    const row = document.createElement('tr');
+
+    tableContent = "<td>";
+    tableContent += completedTasks.list[i].name;
+    tableContent += "</td>";
+
+    tableContent += "<td>";
+    tableContent += "<input type='checkbox' class='completedCheckbox'> </input>";
+    tableContent += "</td>";
+
+    tableContent += "<td>";
+    tableContent += completedTasks.list[i].dateOfCreation;
+    tableContent += "</td>";
+
+    tableContent += "<td class='completion'>";
+    tableContent += completedTasks.list[i].dateOfCompletion;
+    tableContent += "</td>";
+
+    row.innerHTML = tableContent;
+    list.appendChild(row);
+    }
+
+    // Display a table of completed tasks if a new task is marked as completed
+    if (tableOfCompletedTasksStatus === false) {
+      tableOfCompletedTasks.style.display = "block";
+      tableOfCompletedTasksStatus = true;
+    }
+}
+
+document.getElementById("complete").addEventListener("click", markComplete);

@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+body {
+  text-align: center;
+}
+
 .wrap {
   display: flex;
   flex-direction: column;
@@ -13,6 +17,7 @@
 }
 
 .panel {
+  text-align: left;
   width: 30%;
 }
 
@@ -26,7 +31,7 @@
 
 button {
   display: block;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 table {
@@ -37,8 +42,9 @@ td {
   padding-right: 0.5rem;
 }
 
-#completed {
+.completed {
   margin-top: 1rem;
+  text-align: center;
 }
 
 #message {
@@ -48,4 +54,9 @@ td {
 
 .warning {
   color: red;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 2rem;
 }
