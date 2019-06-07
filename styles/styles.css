@@ -32,6 +32,18 @@ body {
 button {
   display: block;
   margin-top: 1rem;
+  color: white;
+  background-color: black;
+  border-radius: 20%;
+}
+
+button:hover {
+  color: black;
+  background-color: gold;
+}
+
+button:active {
+  background-color: pink;
 }
 
 table {

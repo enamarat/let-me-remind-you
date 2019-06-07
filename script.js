@@ -9,6 +9,8 @@ const messageDiv = document.getElementById('message');
 const tableOfCompletedTasks = document.querySelector('.completed');
 let tableOfCompletedTasksStatus = null;
 
+
+
 const getDate = () => {
   let today = new Date();
   let day = String(today.getDate()).padStart(2, '0');
@@ -185,35 +187,6 @@ const deleteTask = () => {
 
 document.getElementById("delete").addEventListener("click", deleteTask);
 
-/********************* Select all tasks **********************/
-let allCheckboxesSelected = false;
-const checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
-const checkboxesCurrent = document.querySelectorAll(".current");
-
-// a function which selects or unselects all checkboxes at once
-const selectAll = (checkboxesClass) => {
-// unselect all checkboxes if the "Select all" button is clicked second time
-  if (allCheckboxesSelected === true) {
-    for (let i = 0; i < checkboxesClass.length; i++) {
-    checkboxesClass[i].checked = false;
-    }
-    allCheckboxesSelected = false;
-  } else if (allCheckboxesSelected === false) {
-    for (let i = 0; i < checkboxesClass.length; i++) {
-    checkboxesClass[i].checked = true;
-    }
-    allCheckboxesSelected = true;
-  }
-//localStorage.clear();
-}
-
-document.getElementById("select-all-current").addEventListener("click", () => {
-  selectAll(checkboxesCurrent);
-});
-document.getElementById("select-all-completed").addEventListener("click", () => {
-  selectAll(checkboxesCompleted);
-});
-
 /********************** Edit tasks **********************/
 let edited = false;
 const editTask = () => {
@@ -338,3 +311,34 @@ const markComplete = () => {
 }
 
 document.getElementById("complete").addEventListener("click", markComplete);
+
+/********************* Select all tasks **********************/
+let allCheckboxesSelected = false;
+let checkboxesCurrent = document.querySelectorAll(".current");
+let checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
+
+// a function which selects or unselects all checkboxes at once
+const selectAll = (checkboxesClass) => {
+  // unselect all checkboxes if the "Select all" button is clicked second time
+  if (allCheckboxesSelected === true) {
+    for (let i = 0; i < checkboxesClass.length; i++) {
+    checkboxesClass[i].checked = false;
+    }
+    allCheckboxesSelected = false;
+  } else if (allCheckboxesSelected === false) {
+    for (let i = 0; i < checkboxesClass.length; i++) {
+    checkboxesClass[i].checked = true;
+    }
+    allCheckboxesSelected = true;
+  }
+//localStorage.clear();
+}
+
+document.getElementById("select-all-current").addEventListener("click", () => {
+  checkboxesCurrent = document.querySelectorAll(".current");
+  selectAll(checkboxesCurrent);
+});
+document.getElementById("select-all-completed").addEventListener("click", () => {
+  checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
+  selectAll(checkboxesCompleted);
+});
