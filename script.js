@@ -302,7 +302,8 @@ const markComplete = () => {
     }
 
     // Display a table of completed tasks if a new task is marked as completed
-    if (tableOfCompletedTasksStatus === false) {
+    let savedValuesCompleted = JSON.parse(localStorage.getItem('completedTasks'));
+    if (tableOfCompletedTasksStatus === false && savedValuesCompleted.list.length > 0) {
       tableOfCompletedTasks.style.display = "block";
       tableOfCompletedTasksStatus = true;
     }
@@ -313,9 +314,21 @@ document.getElementById("complete").addEventListener("click", markComplete);
 /********************* Select all tasks **********************/
 // a function which selects or unselects all checkboxes at once
 const selectAll = (checkboxesType) => {
-  //const checkboxes = document.querySelectorAll("input[type='checkbox']");
+  let count = 0;
   for (let i = 0; i < checkboxesType.length; i++) {
+    if (checkboxesType[i].checked === true) {
+      count++;
+    }
+  }
+
+  if (count === checkboxesType.length) {
+    for (let i = 0; i < checkboxesType.length; i++) {
+    checkboxesType[i].checked = false;
+    }
+  } else {
+    for (let i = 0; i < checkboxesType.length; i++) {
     checkboxesType[i].checked = true;
+    }
   }
 //localStorage.clear();
 }
@@ -329,3 +342,38 @@ document.getElementById("select-all-completed").addEventListener("click", () => 
   let checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
   selectAll(checkboxesCompleted);
 });
+
+/********************* Add a subtask to the selected task ********************/
+const addSubtask = () => {
+  hideWarning();
+
+  let checkboxesCurrent = document.querySelectorAll(".current");
+  const inputForSubtask = document.querySelector("#add_subtask_input");
+
+  for (let i = 0; i < checkboxesCurrent.length; i++) {
+    if (checkboxesCurrent[i].checked === true) {
+      console.log(tasks.list[i]);
+      if (!tasks.list[i].subtasks) {
+        tasks.list[i].subtasks = [];
+      }
+
+      tasks.list[i].subtasks.push({
+        subtaskName: inputForSubtask.value,
+        subtaskDateOfCreation: getDate()
+      });
+      // save updated tasks to the local storage
+      localStorage.setItem('myTasks', JSON.stringify(tasks));
+    }
+  }
+
+  // show warning if a user tries to add a subtask to a completed task
+  let checkboxesCompleted = document.querySelectorAll(".completedCheckbox");
+  for (let i = 0; i < checkboxesCompleted.length; i++) {
+    if (checkboxesCompleted[i].checked === true) {
+      showWarning('You cannot add subtasks to the tasks marked as completed');
+    }
+  }
+  console.log(tasks.list);
+}
+
+document.getElementById("subtask").addEventListener("click", addSubtask);

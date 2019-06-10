@@ -36,6 +36,7 @@ button {
   color: white;
   background-color: black;
   border-radius: 20%;
+  border: 3px outset white;
 }
 
 button:hover {
@@ -43,7 +44,8 @@ button:hover {
 }
 
 button:active {
-  background-color: grey;
+  color: red;
+  border: 3px inset white;
 }
 
 table {
