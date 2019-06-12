@@ -362,8 +362,10 @@ const addSubtask = () => {
 
         // display a header for a new column
         const tableHead = document.querySelector('.tasks-head');
-        tableColumnHeader.innerHTML = "Subtasks";
-        tableHead.childNodes[1].appendChild(tableColumnHeader);
+        if (tableHead.childNodes[1].lastChild.textContent != "Subtasks") {
+          tableColumnHeader.textContent = "Subtasks";
+          tableHead.childNodes[1].appendChild(tableColumnHeader);
+        }
     }
   }
 
@@ -381,7 +383,6 @@ document.getElementById("addSubtask").addEventListener("click", addSubtask);
 
 // Save subtasks
 const saveSubtask = () => {
-  //if (addSubtaskButtonIsClicked === true) {
     let checkboxesCurrent = document.querySelectorAll(".current");
 
     for (let i = 0; i < checkboxesCurrent.length; i++) {
@@ -401,18 +402,19 @@ const saveSubtask = () => {
           // after getting data from the input remove it
           checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
 
-          // const button = document.createElement('button');
-          // button.innerHTML = "+";
-          // button.className = "subtasks";
-          // checkboxesCurrent[i].parentNode.parentNode.appendChild(button);
-          const row = document.createElement('tr');
+          // display subtasks on the screen
+          const tableSubtasks = document.createElement('tbody');
+          tableSubtasks.innerHTML = `<tr>`;
+          tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
+          tableSubtasks.innerHTML += `</tr>`;
+
+          checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
 
         } else {
           showWarning('You cannot create a subtask with no name!');
         }
       }
     }
-//  }
 }
 
 document.getElementById("saveSubtask").addEventListener("click", saveSubtask);
