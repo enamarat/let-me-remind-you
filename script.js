@@ -330,7 +330,7 @@ const selectAll = (checkboxesType) => {
     checkboxesType[i].checked = true;
     }
   }
-localStorage.clear();
+//localStorage.clear();
 }
 
 document.getElementById("select-all-current").addEventListener("click", () => {
@@ -344,17 +344,26 @@ document.getElementById("select-all-completed").addEventListener("click", () => 
 });
 
 /********************* Add a subtask to the selected task ********************/
+
+
 const addSubtask = () => {
   hideWarning();
 
   let checkboxesCurrent = document.querySelectorAll(".current");
+  const tableColumnHeader = document.createElement("td");
 
   for (let i = 0; i < checkboxesCurrent.length; i++) {
-    if (checkboxesCurrent[i].checked === true) {
+    if (checkboxesCurrent[i].checked === true && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields") {
         const inputForSubtask = document.createElement("input");
         const tableColumn = document.createElement("td");
+        tableColumn.className = "inputFields";
         tableColumn.appendChild(inputForSubtask);
         checkboxesCurrent[i].parentNode.parentNode.appendChild(tableColumn);
+
+        // display a header for a new column
+        const tableHead = document.querySelector('.tasks-head');
+        tableColumnHeader.innerHTML = "Subtasks";
+        tableHead.childNodes[1].appendChild(tableColumnHeader);
     }
   }
 
@@ -365,40 +374,45 @@ const addSubtask = () => {
       showWarning('You cannot add subtasks to the tasks marked as completed');
     }
   }
+
 }
 
-document.getElementById("subtask").addEventListener("click", addSubtask);
+document.getElementById("addSubtask").addEventListener("click", addSubtask);
 
 // Save subtasks
 const saveSubtask = () => {
-  // const inputsForSubtasks = document.querySelectorAll('.subtaskInput');
-  // for (let i = 0; i < inputsForSubtasks.length; i++) {
-  //   console.log(inputsForSubtasks[i].value);
-  // }
-  let checkboxesCurrent = document.querySelectorAll(".current");
+  //if (addSubtaskButtonIsClicked === true) {
+    let checkboxesCurrent = document.querySelectorAll(".current");
 
-  for (let i = 0; i < checkboxesCurrent.length; i++) {
-    if (checkboxesCurrent[i].checked === true) {
-      if (checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value.length > 0) {
-        if (!tasks.list[i].subtasks) {
-          tasks.list[i].subtasks = [];
+    for (let i = 0; i < checkboxesCurrent.length; i++) {
+      if (checkboxesCurrent[i].checked === true) {
+        if (checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value.length > 0) {
+          if (!tasks.list[i].subtasks) {
+            tasks.list[i].subtasks = [];
+          }
+
+          tasks.list[i].subtasks.push({
+            subtaskName: checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value,
+            subtaskDateOfCreation: getDate()
+          });
+          // save updated tasks to the local storage
+          localStorage.setItem('myTasks', JSON.stringify(tasks));
+
+          // after getting data from the input remove it
+          checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
+
+          // const button = document.createElement('button');
+          // button.innerHTML = "+";
+          // button.className = "subtasks";
+          // checkboxesCurrent[i].parentNode.parentNode.appendChild(button);
+          const row = document.createElement('tr');
+
+        } else {
+          showWarning('You cannot create a subtask with no name!');
         }
-
-        tasks.list[i].subtasks.push({
-          subtaskName: checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value,
-          subtaskDateOfCreation: getDate()
-        });
-        // save updated tasks to the local storage
-        localStorage.setItem('myTasks', JSON.stringify(tasks));
-
-        // after getting data from the input remove it
-        checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
-      } else {
-        showWarning('You cannot create a subtask with no name!');
       }
     }
-  }
-
+//  }
 }
 
 document.getElementById("saveSubtask").addEventListener("click", saveSubtask);
