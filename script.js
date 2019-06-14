@@ -38,9 +38,33 @@ const checkLocalStorage = () => {
       tableContent += "<td>";
       tableContent += `${savedValues.list[i].dateOfCreation}`;
       tableContent += "</td>";
+
+      // if a task has subtasks, create a new column for them
+      if (savedValues.list[i].subtasks) {
+        tableContent += "<td class=subtasksColumn>";
+        tableContent += "</td>";
+      }
+
       const row = document.createElement('tr');
       row.innerHTML = tableContent;
       list.appendChild(row);
+
+      // if a task has subtasks, display them in a new column
+      if (savedValues.list[i].subtasks) {
+        const tableSubtasks = document.createElement('tbody');
+        tableSubtasks.innerHTML = `<tr>`;
+
+        for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
+          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td>`;
+        }
+
+        tableSubtasks.innerHTML += `</tr>`;
+
+        const subtasksColumn = document.querySelector('.subtasksColumn');
+        subtasksColumn.appendChild(tableSubtasks);
+      }
+
+
     }
 
   }
@@ -65,10 +89,12 @@ const checkLocalStorage = () => {
       tableContentCompleted += "<td class='completion'>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCompletion}`;
       tableContentCompleted += "</td>";
+
       const row = document.createElement('tr');
       row.innerHTML = tableContentCompleted;
       listCompleted.appendChild(row);
     }
+
 
     // Hide table of completed tasks if there are no completed tasks
     if (savedValuesCompleted.list.length === 0) {
