@@ -49,9 +49,10 @@ const checkLocalStorage = () => {
       row.innerHTML = tableContent;
       list.appendChild(row);
 
-      // if a task has subtasks, display them in a new column
+      // if a task has subtasks, display them in the created column
       if (savedValues.list[i].subtasks) {
         const tableSubtasks = document.createElement('tbody');
+        tableSubtasks.className = "subtasks-section";
         tableSubtasks.innerHTML = `<tr>`;
 
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
@@ -60,13 +61,17 @@ const checkLocalStorage = () => {
 
         tableSubtasks.innerHTML += `</tr>`;
 
-        const subtasksColumn = document.querySelector('.subtasksColumn');
-        subtasksColumn.appendChild(tableSubtasks);
+        row.lastChild.appendChild(tableSubtasks);
+
+        // display a header for a new column
+        const tableHead = document.querySelector('.tasks-head');
+        if (tableHead.childNodes[1].lastChild.textContent != "Subtasks") {
+          const tableColumnHeader = document.createElement("td");
+          tableColumnHeader.textContent = "Subtasks";
+          tableHead.childNodes[1].appendChild(tableColumnHeader);
+        }
       }
-
-
     }
-
   }
 
   // completed tasks
@@ -370,8 +375,6 @@ document.getElementById("select-all-completed").addEventListener("click", () => 
 });
 
 /********************* Add a subtask to the selected task ********************/
-
-
 const addSubtask = () => {
   hideWarning();
 
@@ -409,6 +412,7 @@ document.getElementById("addSubtask").addEventListener("click", addSubtask);
 
 // Save subtasks
 const saveSubtask = () => {
+    hideWarning();
     let checkboxesCurrent = document.querySelectorAll(".current");
 
     for (let i = 0; i < checkboxesCurrent.length; i++) {
@@ -429,13 +433,18 @@ const saveSubtask = () => {
           checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
 
           // display subtasks on the screen
-          const tableSubtasks = document.createElement('tbody');
-          tableSubtasks.innerHTML = `<tr>`;
-          tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
-          tableSubtasks.innerHTML += `</tr>`;
-
-          checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
-
+            const tableSubtasksExisting = document.querySelector('.subtasks-section');
+            if (!tableSubtasksExisting) {
+              const tableSubtasks = document.createElement('tbody');
+              tableSubtasks.innerHTML = `<tr>`;
+              tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
+              tableSubtasks.innerHTML += `</tr>`;
+              checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
+            } else {
+              const row = document.createElement('tr');
+              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
+              checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
+            }
         } else {
           showWarning('You cannot create a subtask with no name!');
         }
