@@ -382,8 +382,12 @@ const addSubtask = () => {
   const tableColumnHeader = document.createElement("td");
 
   for (let i = 0; i < checkboxesCurrent.length; i++) {
-    if (checkboxesCurrent[i].checked === true && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields") {
+    if (checkboxesCurrent[i].checked === true
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields"
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName != "TBODY") {
         const inputForSubtask = document.createElement("input");
+
+        // display input field for subtasks
         const tableColumn = document.createElement("td");
         tableColumn.className = "inputFields";
         tableColumn.appendChild(inputForSubtask);
@@ -395,6 +399,11 @@ const addSubtask = () => {
           tableColumnHeader.textContent = "Subtasks";
           tableHead.childNodes[1].appendChild(tableColumnHeader);
         }
+    } else if (checkboxesCurrent[i].checked === true
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
+      const inputForSubtask = document.createElement("input");
+      console.log(checkboxesCurrent[i].parentNode.parentNode.lastChild);
+      checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
     }
   }
 
@@ -429,18 +438,22 @@ const saveSubtask = () => {
           // save updated tasks to the local storage
           localStorage.setItem('myTasks', JSON.stringify(tasks));
 
-          // after getting data from the input remove it
-          checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
+          // after getting data from the input filed remove it
+          if (tasks.list[i].subtasks.length === 1) {
+            checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
+          } else if (tasks.list[i].subtasks.length > 1) {
+            checkboxesCurrent[i].parentNode.parentNode.lastChild.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
+          }
 
           // display subtasks on the screen
             const tableSubtasksExisting = document.querySelector('.subtasks-section');
-            if (!tableSubtasksExisting) {
+            if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName != "TBODY") {
               const tableSubtasks = document.createElement('tbody');
               tableSubtasks.innerHTML = `<tr>`;
               tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
               tableSubtasks.innerHTML += `</tr>`;
               checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
-            } else {
+            } else if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
               const row = document.createElement('tr');
               row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
               checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
