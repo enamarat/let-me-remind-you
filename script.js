@@ -56,7 +56,7 @@ const checkLocalStorage = () => {
         tableSubtasks.innerHTML = `<tr>`;
 
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
-          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td>`;
+          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
         }
 
         tableSubtasks.innerHTML += `</tr>`;
@@ -450,12 +450,12 @@ const saveSubtask = () => {
             if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName != "TBODY") {
               const tableSubtasks = document.createElement('tbody');
               tableSubtasks.innerHTML = `<tr>`;
-              tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
+              tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
               tableSubtasks.innerHTML += `</tr>`;
               checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
             } else if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
               const row = document.createElement('tr');
-              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>`;
+              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
               checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
             }
         } else {
