@@ -91,7 +91,7 @@ const checkLocalStorage = () => {
       tableContentCompleted += "<td>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCreation}`;
       tableContentCompleted += "</td>";
-      tableContentCompleted += "<td class='completion'>";
+      tableContentCompleted += "<td>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCompletion}`;
       tableContentCompleted += "</td>";
 
@@ -173,9 +173,27 @@ document.getElementById("add_task_button").addEventListener("click", addTask);
 const deleteTask = () => {
   let count = 0;
 
+
   // delete current tasks
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
+    let countSubtasks = 0;
+    // delete subtasks
+    if (tasks.list[i].subtasks) {
+      const checkboxesSubtasks = document.querySelectorAll(".subtasksCheckbox");
+      for (let j = 0; j < checkboxesSubtasks.length; j++) {
+      if (checkboxesSubtasks[j].checked === true) {
+        if (countSubtasks === 0) {
+          tasks.list[i].subtasks.splice(j, 1);
+        } else {
+          tasks.list[i].subtasks.splice(j-countSubtasks, 1);
+        }
+        countSubtasks += 1;
+        checkboxesSubtasks[j].parentNode.parentNode.parentNode.removeChild(checkboxesSubtasks[j].parentNode.parentNode);
+        }
+      } // for loop
+    }
+
     if (checkboxes[i].checked === true) {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
@@ -186,13 +204,12 @@ const deleteTask = () => {
         count += 1;
     }
 
-    if (checkboxes[i].className == "subtasksCheckbox") {
-      console.log(checkboxes[i].previousSibling.textContent);
-      console.log(checkboxes[i].parentNode.parentNode.parentNode.parentNode.parentNode.firstChild);
-    }
+
   }
   // save updated tasks to the local storage
  localStorage.setItem('myTasks', JSON.stringify(tasks));
+
+
 
   // delete completed tasks
   const completedCheckboxes = document.querySelectorAll(".completedCheckbox");
@@ -406,7 +423,6 @@ const addSubtask = () => {
       && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY"
       && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT") {
       const inputForSubtask = document.createElement("input");
-      console.log(checkboxesCurrent[i].parentNode.parentNode.lastChild);
       checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
     }
   }
