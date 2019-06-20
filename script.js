@@ -177,7 +177,6 @@ const deleteTask = () => {
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
-    //  if (checkboxes[i].className !== "completedCheckbox" && checkboxes[i].className !== "subtasksCheckbox") {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
           tasks.list.splice(i, 1);
@@ -185,7 +184,6 @@ const deleteTask = () => {
           tasks.list.splice(i-count, 1);
         }
         count += 1;
-    //  }
     }
 
     if (checkboxes[i].className == "subtasksCheckbox") {
@@ -405,7 +403,8 @@ const addSubtask = () => {
           tableHead.childNodes[1].appendChild(tableColumnHeader);
         }
     } else if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY"
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT") {
       const inputForSubtask = document.createElement("input");
       console.log(checkboxesCurrent[i].parentNode.parentNode.lastChild);
       checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
