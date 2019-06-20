@@ -174,10 +174,10 @@ const deleteTask = () => {
   let count = 0;
 
   // delete current tasks
-  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+  const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true) {
-      if (checkboxes[i].parentNode.parentNode.lastChild.className !== "completion") {
+    //  if (checkboxes[i].className !== "completedCheckbox" && checkboxes[i].className !== "subtasksCheckbox") {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
           tasks.list.splice(i, 1);
@@ -185,7 +185,12 @@ const deleteTask = () => {
           tasks.list.splice(i-count, 1);
         }
         count += 1;
-      }
+    //  }
+    }
+
+    if (checkboxes[i].className == "subtasksCheckbox") {
+      console.log(checkboxes[i].previousSibling.textContent);
+      console.log(checkboxes[i].parentNode.parentNode.parentNode.parentNode.parentNode.firstChild);
     }
   }
   // save updated tasks to the local storage
