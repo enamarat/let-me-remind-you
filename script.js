@@ -56,7 +56,7 @@ const checkLocalStorage = () => {
         tableSubtasks.innerHTML = `<tr>`;
 
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
-          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
         }
 
         tableSubtasks.innerHTML += `</tr>`;
@@ -173,7 +173,6 @@ document.getElementById("add_task_button").addEventListener("click", addTask);
 const deleteTask = () => {
   let count = 0;
 
-
   // delete current tasks
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
@@ -182,12 +181,12 @@ const deleteTask = () => {
     if (tasks.list[i].subtasks) {
       const checkboxesSubtasks = document.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < checkboxesSubtasks.length; j++) {
-      if (checkboxesSubtasks[j].checked === true) {
-        if (countSubtasks === 0) {
-          tasks.list[i].subtasks.splice(j, 1);
-        } else {
+        if (checkboxesSubtasks[j].checked === true) {
+          if (countSubtasks === 0) {
+            tasks.list[i].subtasks.splice(j, 1);
+          } else {
           tasks.list[i].subtasks.splice(j-countSubtasks, 1);
-        }
+          }
         countSubtasks += 1;
         checkboxesSubtasks[j].parentNode.parentNode.parentNode.removeChild(checkboxesSubtasks[j].parentNode.parentNode);
         }
@@ -208,8 +207,6 @@ const deleteTask = () => {
   }
   // save updated tasks to the local storage
  localStorage.setItem('myTasks', JSON.stringify(tasks));
-
-
 
   // delete completed tasks
   const completedCheckboxes = document.querySelectorAll(".completedCheckbox");
@@ -245,9 +242,18 @@ const editTask = () => {
   if (edited === false) {
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
     for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
+      if (checkboxes[i].checked === true
+        && checkboxes[i].className !== "completedCheckbox") {
         let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
-        let taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+
+        let taskNameField = null;
+        if (checkboxes[i].className == "current") {
+          taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+        }
+
+        if (checkboxes[i].className == "subtasksCheckbox") {
+          taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+        }
 
         taskNameField.textContent = "";
         const inputField = document.createElement('input');
@@ -256,6 +262,7 @@ const editTask = () => {
         inputField.value = taskName;
         edited = true;
       }
+
       if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
         showWarning('Completed tasks cannot be edited!');
       }
@@ -271,7 +278,8 @@ const saveChanges = () => {
   hideWarning();
 
   if (edited === true) {
-    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+    // save edited tasks
+    const checkboxes = document.querySelectorAll(".current");
     for (let i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
         tasks.list[i].name = checkboxes[i].parentNode.parentNode.firstChild.firstChild.value;
@@ -279,7 +287,19 @@ const saveChanges = () => {
         localStorage.setItem('myTasks', JSON.stringify(tasks));
         checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
       }
-    }
+
+    // save edited subtasks
+    if (tasks.list[i].subtasks) {
+      const subtasksCheckbox = document.querySelectorAll(".subtasksCheckbox");
+      for (let j = 0; j < subtasksCheckbox.length; j++) {
+        if (subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.tagName == "INPUT") {
+          tasks.list[i].subtasks[j].subtaskName = subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.value;
+          localStorage.setItem('myTasks', JSON.stringify(tasks));
+          subtasksCheckbox[j].parentNode.parentNode.firstChild.textContent = tasks.list[i].subtasks[j].subtaskName;
+          }
+        }
+      }
+    } // for loop
   }
   edited = false;
 }
@@ -475,7 +495,7 @@ const saveSubtask = () => {
               checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
             } else if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
               const row = document.createElement('tr');
-              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
+              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
               checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
             }
         } else {
