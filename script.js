@@ -100,7 +100,6 @@ const checkLocalStorage = () => {
       listCompleted.appendChild(row);
     }
 
-
     // Hide table of completed tasks if there are no completed tasks
     if (savedValuesCompleted.list.length === 0) {
       tableOfCompletedTasks.style.display = "none";
@@ -110,7 +109,6 @@ const checkLocalStorage = () => {
       tableOfCompletedTasksStatus = true;
     }
   }
-
 }
 
 checkLocalStorage();
@@ -143,7 +141,7 @@ const addTask = () => {
       name: input.value,
       dateOfCreation: getDate()
     });
-      // if warning about empty input was shown earlier, hide it
+      // if a warning about empty input was shown earlier, hide it
       hideWarning();
 
       tableContent = "<td>";
@@ -177,7 +175,7 @@ const deleteTask = () => {
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
     let countSubtasks = 0;
-    // delete subtasks
+    // delete subtasks if they exist and are checked
     if (tasks.list[i].subtasks) {
       const checkboxesSubtasks = document.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < checkboxesSubtasks.length; j++) {
@@ -364,7 +362,7 @@ const markComplete = () => {
     tableContent += completedTasks.list[i].dateOfCreation;
     tableContent += "</td>";
 
-    tableContent += "<td class='completion'>";
+    tableContent += "<td>";
     tableContent += completedTasks.list[i].dateOfCompletion;
     tableContent += "</td>";
 
@@ -424,7 +422,7 @@ const addSubtask = () => {
   for (let i = 0; i < checkboxesCurrent.length; i++) {
     if (checkboxesCurrent[i].checked === true
       && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields"
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName != "TBODY") {
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "subtasksColumn") {
         const inputForSubtask = document.createElement("input");
 
         // display input field for subtasks
@@ -440,8 +438,8 @@ const addSubtask = () => {
           tableHead.childNodes[1].appendChild(tableColumnHeader);
         }
     } else if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY"
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT") {
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT"
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className == "subtasksColumn") {
       const inputForSubtask = document.createElement("input");
       checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
     }
@@ -486,18 +484,14 @@ const saveSubtask = () => {
           }
 
           // display subtasks on the screen
-            const tableSubtasksExisting = document.querySelector('.subtasks-section');
-            if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName != "TBODY") {
-              const tableSubtasks = document.createElement('tbody');
-              tableSubtasks.innerHTML = `<tr>`;
-              tableSubtasks.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} <input type="checkbox" class="subtasksCheckbox"> </td>`;
-              tableSubtasks.innerHTML += `</tr>`;
-              checkboxesCurrent[i].parentNode.parentNode.appendChild(tableSubtasks);
-            } else if (checkboxesCurrent[i].parentNode.parentNode.lastChild.tagName == "TBODY") {
-              const row = document.createElement('tr');
-              row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
-              checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
-            }
+          if (checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "subtasksColumn") {
+            const tableColumn = document.createElement("td");
+            tableColumn.className = "subtasksColumn";
+            checkboxesCurrent[i].parentNode.parentNode.appendChild(tableColumn);
+          }
+          const row = document.createElement('tr');
+          row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
         } else {
           showWarning('You cannot create a subtask with no name!');
         }
