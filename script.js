@@ -51,17 +51,11 @@ const checkLocalStorage = () => {
 
       // if a task has subtasks, display them in the created column
       if (savedValues.list[i].subtasks) {
-        const tableSubtasks = document.createElement('tbody');
-        tableSubtasks.className = "subtasks-section";
-        tableSubtasks.innerHTML = `<tr>`;
-
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
-          tableSubtasks.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          const tableRow = document.createElement('tr');
+          tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          row.lastChild.appendChild(tableRow);
         }
-
-        tableSubtasks.innerHTML += `</tr>`;
-
-        row.lastChild.appendChild(tableSubtasks);
 
         // display a header for a new column
         const tableHead = document.querySelector('.tasks-head');
@@ -174,22 +168,27 @@ const deleteTask = () => {
   // delete current tasks
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
+    /***********/
+    // delete subtasks
     let countSubtasks = 0;
-    // delete subtasks if they exist and are checked
-    if (tasks.list[i].subtasks) {
-      const checkboxesSubtasks = document.querySelectorAll(".subtasksCheckbox");
+    const checkboxesSubtasks = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < checkboxesSubtasks.length; j++) {
         if (checkboxesSubtasks[j].checked === true) {
+         /* Determine from which tasks delete a subtask depending on a  checkbox position. Checkboxes of current tasks
+         are in the same order as the tasks in the array */
+         let localCheckbox = checkboxesSubtasks[j].parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild;
+         const checkboxesArray = Array.from(checkboxes);
+
           if (countSubtasks === 0) {
-            tasks.list[i].subtasks.splice(j, 1);
+            tasks.list[checkboxesArray.indexOf(localCheckbox)].subtasks.splice(j, 1);
           } else {
-          tasks.list[i].subtasks.splice(j-countSubtasks, 1);
+            tasks.list[checkboxesArray.indexOf(localCheckbox)].subtasks.splice(j-countSubtasks, 1);
           }
         countSubtasks += 1;
         checkboxesSubtasks[j].parentNode.parentNode.parentNode.removeChild(checkboxesSubtasks[j].parentNode.parentNode);
         }
-      } // for loop
-    }
+      }
+    /************/
 
     if (checkboxes[i].checked === true) {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
@@ -200,8 +199,6 @@ const deleteTask = () => {
         }
         count += 1;
     }
-
-
   }
   // save updated tasks to the local storage
  localStorage.setItem('myTasks', JSON.stringify(tasks));
