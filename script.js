@@ -284,16 +284,17 @@ const saveChanges = () => {
       }
 
     // save edited subtasks
-    if (tasks.list[i].subtasks) {
-      const subtasksCheckbox = document.querySelectorAll(".subtasksCheckbox");
+  ///  if (tasks.list[i].subtasks) {
+      const subtasksCheckbox = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < subtasksCheckbox.length; j++) {
+        console.log(subtasksCheckbox[j].parentNode.parentNode.firstChild);
         if (subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.tagName == "INPUT") {
           tasks.list[i].subtasks[j].subtaskName = subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.value;
           localStorage.setItem('myTasks', JSON.stringify(tasks));
           subtasksCheckbox[j].parentNode.parentNode.firstChild.textContent = tasks.list[i].subtasks[j].subtaskName;
           }
         }
-      }
+    ///  }
     } // for loop
   }
   edited = false;
