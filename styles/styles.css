@@ -4,6 +4,21 @@
 
 body {
   text-align: center;
+  display: flex;
+  width: 100%;
+}
+
+.panel {
+  text-align: left;
+  background-color: black;
+  height: 100vh;
+  width: 25%;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  width: 75%;
 }
 
 .wrap {
@@ -11,21 +26,13 @@ body {
   flex-direction: column;
 }
 
-.container {
-  display: flex;
-  justify-content: space-between;
+.panel div {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
-
-.panel {
-  text-align: left;
-  width: 30%;
-  background-color: black;
-  height: 90vh;
-}
-
 
 .displayList {
-  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;

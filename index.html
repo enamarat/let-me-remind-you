@@ -7,24 +7,36 @@
     <link href="styles/styles.css" type="text/css" rel="stylesheet">
   </head>
   <body>
-    <h1> Let me remind you </h1>
-    <div class="wrap">
-
-      <div id="message">
+    <div class="panel">
+      <div>
+        <input id="add_task_input" placeholder="Type your task's name"> </input>
+        <button id="add_task_button"> Add to list </button>
       </div>
+      <div>
+        <button id="edit"> Edit </button>
+        <button id="save"> Save changes </button>
+      </div>
+      <div>
+        <button id="delete"> Delete </button>
+        <button id="complete"> Mark as complete </button>
+      </div>
+      <div>
+        <button id="addSubtask"> Add subtask </button>
+        <button id="saveSubtask"> Save subtask </button>
+      </div>
+      <div>
+        <button id="select-all-current"> Select all current tasks </button>
+      </div>
+      <div>
+        <button id="select-all-completed"> Select all completed tasks </button>
+      </div>
+    </div>
 
-      <div class="container">
-        <div class="panel">
-          <input id="add_task_input" placeholder="Type your task's name"> </input>
-          <button id="add_task_button"> Add to list </button>
-          <button id="delete"> Delete </button>
-          <button id="complete"> Mark as complete </button>
-          <button id="edit"> Edit </button>
-          <button id="save"> Save changes </button>
-          <button id="addSubtask"> Add subtask </button>
-          <button id="saveSubtask"> Save subtask </button>
-          <button id="select-all-current"> Select all current tasks </button>
-          <button id="select-all-completed"> Select all completed tasks </button>
+    <div class="list">
+      
+      <div class="wrap">
+        <h1> Let me remind you </h1>
+        <div id="message">
         </div>
 
         <div class="displayList">
@@ -59,7 +71,8 @@
       </div>
 
      </div>
-   </div>
+
+    </div>
 
     <script src="./script.js"></script>
   </body>
