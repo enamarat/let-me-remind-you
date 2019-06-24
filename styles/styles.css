@@ -11,7 +11,7 @@ body {
 .panel {
   text-align: left;
   background-color: black;
-  height: 100vh;
+  min-height: 100vh;
   width: 22%;
 }
 
@@ -64,6 +64,10 @@ td {
   padding-right: 0.5rem;
 }
 
+.tasks {
+  border: 2px solid black;
+}
+
 .task {
   border: 2px solid black;
 }
@@ -93,4 +97,11 @@ h1 {
 
 .completedSubtask {
   color: blue;
+}
+
+@media screen and (max-width: 768px) {
+  .panel {
+    width: 40%;
+  }
+
 }

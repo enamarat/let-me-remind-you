@@ -32,18 +32,18 @@ const checkLocalStorage = () => {
       tableContent = "<td>";
       tableContent += `${savedValues.list[i].name}`;
       tableContent += "</td>";
+
       tableContent += "<td>";
       tableContent += "<input type='checkbox' class='current'> </input>";
       tableContent += "</td>";
+
       tableContent += "<td>";
       tableContent += `${savedValues.list[i].dateOfCreation}`;
       tableContent += "</td>";
 
-      // if any task has subtasks, create a new column for them
-      if (savedValues.list[i].subtasks) {
-        tableContent += "<td class=subtasksColumn>";
-        tableContent += "</td>";
-      }
+      // a column for subtasks
+      tableContent += "<td>";
+      tableContent += "</td>";
 
       const row = document.createElement('tr');
       row.className = "task";
@@ -165,6 +165,9 @@ const addTask = () => {
       tableContent += tasks.list[tasks.list.length-1].dateOfCreation;
       tableContent += "</td>";
 
+      tableContent += "<td>";
+      tableContent += "</td>";
+
       row.innerHTML = tableContent;
       row.className = "task";
       list.appendChild(row);
@@ -172,6 +175,7 @@ const addTask = () => {
       input.value = "";
       // save tasks to local storage
       localStorage.setItem('myTasks', JSON.stringify(tasks));
+
   }
 }
 
@@ -448,10 +452,13 @@ const addSubtask = () => {
         const inputForSubtask = document.createElement("input");
 
         // display input field for subtasks
-        const tableColumn = document.createElement("td");
-        tableColumn.className = "inputFields";
-        tableColumn.appendChild(inputForSubtask);
-        checkboxesCurrent[i].parentNode.parentNode.appendChild(tableColumn);
+        // const tableColumn = document.createElement("td");
+        // tableColumn.className = "inputFields";
+        // tableColumn.appendChild(inputForSubtask);
+        // checkboxesCurrent[i].parentNode.parentNode.appendChild(tableColumn);
+
+  checkboxesCurrent[i].parentNode.parentNode.lastChild.className = "inputFields";
+  checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(inputForSubtask);
 
         // display a header for a new column
         const tableHead = document.querySelector('.tasks-head');
