@@ -39,13 +39,14 @@ const checkLocalStorage = () => {
       tableContent += `${savedValues.list[i].dateOfCreation}`;
       tableContent += "</td>";
 
-      // if a task has subtasks, create a new column for them
+      // if any task has subtasks, create a new column for them
       if (savedValues.list[i].subtasks) {
         tableContent += "<td class=subtasksColumn>";
         tableContent += "</td>";
       }
 
       const row = document.createElement('tr');
+      row.className = "task";
       row.innerHTML = tableContent;
       list.appendChild(row);
 
@@ -53,6 +54,7 @@ const checkLocalStorage = () => {
       if (savedValues.list[i].subtasks) {
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
           const tableRow = document.createElement('tr');
+          tableRow.className = "subtask";
           tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
           row.lastChild.appendChild(tableRow);
         }
@@ -64,6 +66,19 @@ const checkLocalStorage = () => {
           tableColumnHeader.textContent = "Subtasks";
           tableHead.childNodes[1].appendChild(tableColumnHeader);
         }
+
+        // display subtasks marked as completed
+        const taskRow = document.querySelectorAll(".task");
+        const subtaskRow = taskRow[i].querySelectorAll(".subtask");
+        for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
+          if (savedValues.list[i].subtasks[j].completed === true) {
+            const additionalColumn = document.createElement('td');
+            additionalColumn.textContent = "completed";
+            subtaskRow[j].className = "completedSubtask";
+            subtaskRow[j].appendChild(additionalColumn);
+          }
+        }
+
       }
     }
   }
@@ -151,6 +166,7 @@ const addTask = () => {
       tableContent += "</td>";
 
       row.innerHTML = tableContent;
+      row.className = "task";
       list.appendChild(row);
 
       input.value = "";
@@ -189,7 +205,6 @@ const deleteTask = () => {
         }
       }
     /************/
-
     if (checkboxes[i].checked === true) {
         checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
         if (count === 0) {
@@ -284,17 +299,14 @@ const saveChanges = () => {
       }
 
     // save edited subtasks
-  ///  if (tasks.list[i].subtasks) {
       const subtasksCheckbox = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < subtasksCheckbox.length; j++) {
-        console.log(subtasksCheckbox[j].parentNode.parentNode.firstChild);
         if (subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.tagName == "INPUT") {
           tasks.list[i].subtasks[j].subtaskName = subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.value;
           localStorage.setItem('myTasks', JSON.stringify(tasks));
           subtasksCheckbox[j].parentNode.parentNode.firstChild.textContent = tasks.list[i].subtasks[j].subtaskName;
           }
         }
-    ///  }
     } // for loop
   }
   edited = false;
@@ -308,7 +320,7 @@ const markComplete = () => {
   hideWarning();
 
   let count = 0;
-  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+  const checkboxes = document.querySelectorAll(".current");
 
   /* remove selected tasks from "tasks" array and paste them
     into "completedTasks" array */
@@ -326,8 +338,20 @@ const markComplete = () => {
       }
       count += 1;
     }
-    if (checkboxes[i].checked === true && checkboxes[i].className === "completedCheckbox") {
-      showWarning('The task is already completed!');
+
+    // Mark subtasks as completed
+    const subtasksCheckbox = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
+    for (let j = 0; j < subtasksCheckbox.length; j++ ) {
+      if (subtasksCheckbox[j].checked === true) {
+        if (subtasksCheckbox[j].parentNode.parentNode.lastChild.className != "additionalColumn") {
+          const additionalColumn = document.createElement('td');
+          additionalColumn.className = "additionalColumn";
+          subtasksCheckbox[j].parentNode.parentNode.appendChild(additionalColumn);
+          additionalColumn.textContent = "completed";
+          tasks.list[i].subtasks[j].completed = true;
+        }
+        subtasksCheckbox[j].parentNode.parentNode.className = "completedSubtask";
+      }
     }
 }
   // save updated tasks to the local storage
