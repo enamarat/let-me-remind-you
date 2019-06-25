@@ -37,6 +37,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 1rem;
+  border-right: 6px solid black;
+  border-left: 6px solid black;
 }
 
 /*** buttons ***/
@@ -61,6 +64,8 @@ button:active {
 /*** tables ***/
 table {
   text-align: center;
+  margin-right: 3rem;
+  margin-left: 3rem;
 }
 
 thead tr {
@@ -78,7 +83,9 @@ td {
 
 /*** table of current tasks ***/
 .task {
-  border: 2px solid black;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 .completedSubtask {
@@ -92,7 +99,9 @@ td {
 }
 
 .completedTask {
-  border: 2px solid black;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 /*** warnings ***/
@@ -107,7 +116,8 @@ td {
 
 h1 {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 4rem;
+  text-decoration: underline;
 }
 
 /*** queries ***/
