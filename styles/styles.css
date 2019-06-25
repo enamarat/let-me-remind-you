@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 
+/*** layout ***/
 body {
   text-align: center;
   display: flex;
@@ -38,6 +39,7 @@ body {
   align-items: center;
 }
 
+/*** buttons ***/
 button {
   margin-top: 1rem;
   padding: 0.5rem;
@@ -56,31 +58,44 @@ button:active {
   border: 3px inset white;
 }
 
+/*** tables ***/
 table {
   text-align: center;
+}
+
+thead tr {
+  background-color: black;
+  color: white;
+}
+
+tbody {
+  border: 2px solid black;
 }
 
 td {
   padding-right: 0.5rem;
 }
 
-.tasks {
-  border: 2px solid black;
-}
-
+/*** table of current tasks ***/
 .task {
   border: 2px solid black;
 }
 
-.tasks-head tr {
-  border: 2px solid black;
+.completedSubtask {
+  color: blue;
 }
 
+/*** table of completed tasks ***/
 .completed {
   margin-top: 1rem;
   text-align: center;
 }
 
+.completedTask {
+  border: 2px solid black;
+}
+
+/*** warnings ***/
 #message {
   width: 100%;
   text-align: center;
@@ -95,10 +110,7 @@ h1 {
   font-size: 2rem;
 }
 
-.completedSubtask {
-  color: blue;
-}
-
+/*** queries ***/
 @media screen and (max-width: 768px) {
   .panel {
     width: 40%;
