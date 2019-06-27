@@ -19,7 +19,8 @@ body {
 .list {
   display: flex;
   justify-content: center;
-  width: 75%;
+  width: 78%;
+  background-color: rgba(224, 231, 90, 0.4);
 }
 
 .wrap {
@@ -43,6 +44,10 @@ body {
 }
 
 /*** buttons ***/
+#add_task_input {
+  background-color: rgb(224, 231, 90);
+}
+
 button {
   margin-top: 1rem;
   padding: 0.5rem;
