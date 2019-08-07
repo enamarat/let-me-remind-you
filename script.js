@@ -441,16 +441,13 @@ const addSubtask = () => {
 
   for (let i = 0; i < checkboxesCurrent.length; i++) {
     if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields"
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "subtasksColumn") {
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields") {
         const inputForSubtask = document.createElement("input");
-
         checkboxesCurrent[i].parentNode.parentNode.lastChild.className = "inputFields";
         checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(inputForSubtask);
-
-    } else if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT"
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className == "subtasksColumn") {
+    }
+    else if (checkboxesCurrent[i].checked === true
+      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT") {
       const inputForSubtask = document.createElement("input");
       checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
     }
@@ -475,33 +472,25 @@ const saveSubtask = () => {
 
     for (let i = 0; i < checkboxesCurrent.length; i++) {
       if (checkboxesCurrent[i].checked === true) {
-        if (checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value.length > 0) {
+        if (checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.value.length > 0) {
           if (!tasks.list[i].subtasks) {
             tasks.list[i].subtasks = [];
           }
 
           tasks.list[i].subtasks.push({
-            subtaskName: checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0].value,
+            subtaskName: checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.value,
             subtaskDateOfCreation: getDate()
           });
           // save updated tasks to the local storage
           localStorage.setItem('myTasks', JSON.stringify(tasks));
 
           // after getting data from the input filed remove it
-          if (tasks.list[i].subtasks.length === 1) {
-            checkboxesCurrent[i].parentNode.parentNode.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild);
-          } else if (tasks.list[i].subtasks.length > 1) {
-            checkboxesCurrent[i].parentNode.parentNode.lastChild.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
-          }
+          checkboxesCurrent[i].parentNode.parentNode.lastChild.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild);
 
           // display subtasks on the screen
-          if (checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "subtasksColumn") {
-            const tableColumn = document.createElement("td");
-            tableColumn.className = "subtasksColumn";
-            checkboxesCurrent[i].parentNode.parentNode.appendChild(tableColumn);
-          }
           const row = document.createElement('tr');
           row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          row.className  = "subtask";
           checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
         } else {
           showWarning('You cannot create a subtask with no name!');
