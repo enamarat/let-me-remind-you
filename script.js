@@ -42,8 +42,13 @@ const checkLocalStorage = () => {
       tableContent += "</td>";
 
       // a column for subtasks
-      tableContent += "<td>";
-      tableContent += "</td>";
+      if (savedValues.list[i].subtasks) {
+        tableContent += "<td class='inputFields'>";
+        tableContent += "</td>";
+      } else {
+        tableContent += "<td>";
+        tableContent += "</td>";
+      }
 
       const row = document.createElement('tr');
       row.className = "task";
