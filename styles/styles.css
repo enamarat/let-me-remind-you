@@ -6,6 +6,7 @@
 body {
   text-align: center;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   background-color: black;
   color: white;
@@ -14,13 +15,20 @@ body {
 .panel {
   text-align: left;
   min-height: 100vh;
-  width: auto;
+  width: 200px;
+  position: fixed;
+  /* z-index: 1; */
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 30px;
 }
 
 .list {
   display: flex;
   justify-content: center;
-  width: 75%;
+  width: 100%;
+  margin-left: 250px;
 }
 
 .wrap {
@@ -125,11 +133,27 @@ h1 {
 /*** queries ***/
 @media screen and (max-width: 768px) {
   .panel {
-    width: auto;
+    width: 8rem;
   }
 
   .list {
-    width: auto;
+    margin-left: 8rem;
+  }
+
+  #add_task_input_div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #add_task_input {
+    margin-bottom: 0.7rem;
+    width: 97%;
+    }
+
+  button {
+    font-size: 0.9rem;
+    margin: 0;
+    margin-bottom: 0.3rem;
   }
 
 }
