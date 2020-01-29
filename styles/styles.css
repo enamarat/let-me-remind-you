@@ -1,5 +1,7 @@
 * {
   box-sizing: border-box;
+  font-family: monospace, sans-serif;
+  font-size: 14px;
 }
 
 /*** layout ***/
@@ -83,6 +85,9 @@ thead tr {
   color: white;
 }
 
+tr {
+    height: 20px;
+}
 
 td {
   padding-right: 0.5rem;
@@ -129,6 +134,68 @@ h1 {
   font-size: 4rem;
   text-decoration: underline;
   box-shadow: 15px 15px 45px 15px rgba(2, 85, 229, 0.96);
+}
+
+/** custom checkboxes **/
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left:-8px;
+  height: 16px;
+  width: 16px;
+  background-color: #eee;
+}
+
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container input:checked ~ .checkmark {
+  background-color: #D6F408;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 /*** queries ***/

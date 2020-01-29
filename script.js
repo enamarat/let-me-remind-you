@@ -34,7 +34,10 @@ const checkLocalStorage = () => {
       tableContent += "</td>";
 
       tableContent += "<td>";
-      tableContent += "<input type='checkbox' class='current'> </input>";
+      tableContent += `<label class="container">
+                        <input type="checkbox" class="current">
+                        <span class="checkmark"></span>
+                        </label>`;
       tableContent += "</td>";
 
       tableContent += "<td>";
@@ -60,7 +63,13 @@ const checkLocalStorage = () => {
         for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
           const tableRow = document.createElement('tr');
           tableRow.className = "subtask";
-          tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td>
+                              <td>
+                              <label class="container">
+                              <input type="checkbox" class="subtasksCheckbox">
+                              <span class="checkmark"></span>
+                              </label>
+                              </td>`;
           row.lastChild.appendChild(tableRow);
         }
 
@@ -92,7 +101,10 @@ const checkLocalStorage = () => {
       tableContentCompleted += `${savedValuesCompleted.list[i].name}`;
       tableContentCompleted += "</td>";
       tableContentCompleted += "<td>";
-      tableContentCompleted += "<input type='checkbox' class='completedCheckbox'> </input>";
+      tableContentCompleted += `<label class="container">
+                        <input type="checkbox" class="completedCheckbox">
+                        <span class="checkmark"></span>
+                        </label>`;
       tableContentCompleted += "</td>";
       tableContentCompleted += "<td>";
       tableContentCompleted += `${savedValuesCompleted.list[i].dateOfCreation}`;
@@ -156,7 +168,10 @@ const addTask = () => {
       tableContent += "</td>";
 
       tableContent += "<td>";
-      tableContent += "<input type='checkbox' class='current'> </input>";
+      tableContent += `<label class="container">
+                        <input type="checkbox" class="current">
+                        <span class="checkmark"></span>
+                        </label>`;
       tableContent += "</td>";
 
       tableContent += "<td>";
@@ -187,14 +202,15 @@ const deleteTask = () => {
   const checkboxes = document.querySelectorAll(".current");
   for (let i = 0; i < checkboxes.length; i++) {
     /***********/
+    const lastColumn = checkboxes[i].parentNode.parentNode.parentNode.lastChild;
     // delete subtasks
     let countSubtasks = 0;
-    const checkboxesSubtasks = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
+    const checkboxesSubtasks = lastColumn.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < checkboxesSubtasks.length; j++) {
         if (checkboxesSubtasks[j].checked === true) {
-         /* Determine from which tasks delete a subtask depending on a  checkbox position. Checkboxes of current tasks
+         /* Determine from which tasks to delete a subtask depending on a checkbox position. Checkboxes of current tasks
          are in the same order as the tasks in the array */
-         let localCheckbox = checkboxesSubtasks[j].parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild;
+         let localCheckbox = checkboxesSubtasks[j].parentNode.parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild.firstChild.nextSibling;
          const checkboxesArray = Array.from(checkboxes);
 
           if (countSubtasks === 0) {
@@ -203,12 +219,12 @@ const deleteTask = () => {
             tasks.list[checkboxesArray.indexOf(localCheckbox)].subtasks.splice(j-countSubtasks, 1);
           }
         countSubtasks += 1;
-        checkboxesSubtasks[j].parentNode.parentNode.parentNode.removeChild(checkboxesSubtasks[j].parentNode.parentNode);
+        checkboxesSubtasks[j].parentNode.parentNode.parentNode.parentNode.removeChild(checkboxesSubtasks[j].parentNode.parentNode.parentNode);
         }
       }
     /************/
     if (checkboxes[i].checked === true) {
-        checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
+        checkboxes[i].parentNode.parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode.parentNode);
         if (count === 0) {
           tasks.list.splice(i, 1);
         } else {
@@ -224,7 +240,7 @@ const deleteTask = () => {
   const completedCheckboxes = document.querySelectorAll(".completedCheckbox");
   for (let j = 0; j < completedCheckboxes.length; j++) {
     if (completedCheckboxes[j].checked === true) {
-      completedCheckboxes[j].parentNode.parentNode.parentNode.removeChild(completedCheckboxes[j].parentNode.parentNode);
+      completedCheckboxes[j].parentNode.parentNode.parentNode.parentNode.removeChild(completedCheckboxes[j].parentNode.parentNode.parentNode);
       if (count === 0) {
         completedTasks.list.splice(j, 1);
       } else {
@@ -254,17 +270,18 @@ const editTask = () => {
   if (edited === false) {
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
     for (let i = 0; i < checkboxes.length; i++) {
+
       if (checkboxes[i].checked === true
         && checkboxes[i].className !== "completedCheckbox") {
-        let taskName = checkboxes[i].parentNode.parentNode.firstChild.textContent;
+        let taskName = checkboxes[i].parentNode.parentNode.parentNode.firstChild.textContent; //ch
 
         let taskNameField = null;
         if (checkboxes[i].className == "current") {
-          taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+          taskNameField = checkboxes[i].parentNode.parentNode.parentNode.firstChild; //ch
         }
 
         if (checkboxes[i].className == "subtasksCheckbox") {
-          taskNameField = checkboxes[i].parentNode.parentNode.firstChild;
+          taskNameField = checkboxes[i].parentNode.parentNode.parentNode.firstChild;
         }
 
         taskNameField.textContent = "";
@@ -293,20 +310,20 @@ const saveChanges = () => {
     // save edited tasks
     const checkboxes = document.querySelectorAll(".current");
     for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
-        tasks.list[i].name = checkboxes[i].parentNode.parentNode.firstChild.firstChild.value;
+      if (checkboxes[i].parentNode.parentNode.parentNode.firstChild.firstChild.tagName === "INPUT") {
+        tasks.list[i].name = checkboxes[i].parentNode.parentNode.parentNode.firstChild.firstChild.value;
         // save updated tasks to the local storage
         localStorage.setItem('myTasks', JSON.stringify(tasks));
-        checkboxes[i].parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
+        checkboxes[i].parentNode.parentNode.parentNode.firstChild.textContent = tasks.list[i].name;
       }
 
     // save edited subtasks
-      const subtasksCheckbox = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
+      const subtasksCheckbox = checkboxes[i].parentNode.parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < subtasksCheckbox.length; j++) {
-        if (subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.tagName == "INPUT") {
-          tasks.list[i].subtasks[j].subtaskName = subtasksCheckbox[j].parentNode.parentNode.firstChild.firstChild.value;
+        if (subtasksCheckbox[j].parentNode.parentNode.parentNode.firstChild.firstChild.tagName == "INPUT") {
+          tasks.list[i].subtasks[j].subtaskName = subtasksCheckbox[j].parentNode.parentNode.parentNode.firstChild.firstChild.value;
           localStorage.setItem('myTasks', JSON.stringify(tasks));
-          subtasksCheckbox[j].parentNode.parentNode.firstChild.textContent = tasks.list[i].subtasks[j].subtaskName;
+          subtasksCheckbox[j].parentNode.parentNode.parentNode.firstChild.textContent = tasks.list[i].subtasks[j].subtaskName;
           }
         }
     } // for loop
@@ -317,18 +334,16 @@ const saveChanges = () => {
 document.getElementById("save").addEventListener("click", saveChanges);
 
 /******************** Mark tasks as complete **********************/
-const markComplete = () => {
+const markAsCompleted = () => {
   // if any warning was shown earlier, hide it
   hideWarning();
-
   let count = 0;
   const checkboxes = document.querySelectorAll(".current");
-
   /* remove selected tasks from "tasks" array and paste them
     into "completedTasks" array */
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked === true && checkboxes[i].className !== "completedCheckbox") {
-      checkboxes[i].parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode);
+      checkboxes[i].parentNode.parentNode.parentNode.parentNode.removeChild(checkboxes[i].parentNode.parentNode.parentNode);
       if (count === 0) {
         tasks.list[i].dateOfCompletion = getDate();
         completedTasks.list.push(tasks.list[i]);
@@ -342,17 +357,17 @@ const markComplete = () => {
     }
 
     // Mark subtasks as completed
-    const subtasksCheckbox = checkboxes[i].parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
+    const subtasksCheckbox = checkboxes[i].parentNode.parentNode.parentNode.lastChild.querySelectorAll(".subtasksCheckbox");
     for (let j = 0; j < subtasksCheckbox.length; j++ ) {
       if (subtasksCheckbox[j].checked === true) {
-        if (subtasksCheckbox[j].parentNode.parentNode.lastChild.className != "additionalColumn") {
+        if (subtasksCheckbox[j].parentNode.parentNode.parentNode.lastChild.className != "additionalColumn") {
           const additionalColumn = document.createElement('td');
           additionalColumn.className = "additionalColumn";
-          subtasksCheckbox[j].parentNode.parentNode.appendChild(additionalColumn);
+          subtasksCheckbox[j].parentNode.parentNode.parentNode.appendChild(additionalColumn);
           additionalColumn.textContent = "completed";
           tasks.list[i].subtasks[j].completed = true;
         }
-        subtasksCheckbox[j].parentNode.parentNode.className = "completedSubtask";
+        subtasksCheckbox[j].parentNode.parentNode.parentNode.className = "completedSubtask";
       }
     }
 }
@@ -379,7 +394,10 @@ const markComplete = () => {
     tableContent += "</td>";
 
     tableContent += "<td>";
-    tableContent += "<input type='checkbox' class='completedCheckbox'> </input>";
+    tableContent += `<label class="container">
+                      <input type="checkbox" class="completedCheckbox">
+                      <span class="checkmark"></span>
+                      </label>`;
     tableContent += "</td>";
 
     tableContent += "<td>";
@@ -403,7 +421,7 @@ const markComplete = () => {
     }
 }
 
-document.getElementById("complete").addEventListener("click", markComplete);
+document.getElementById("complete").addEventListener("click", markAsCompleted);
 
 /********************* Select all tasks **********************/
 // a function which selects or unselects all checkboxes at once
@@ -445,16 +463,19 @@ const addSubtask = () => {
   const tableColumnHeader = document.createElement("td");
 
   for (let i = 0; i < checkboxesCurrent.length; i++) {
-    if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.className != "inputFields") {
+    const lastColumn =  checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild;
+    if (checkboxesCurrent[i].checked === true) {
+      if (lastColumn.childNodes.length === 0) {
         const inputForSubtask = document.createElement("input");
-        checkboxesCurrent[i].parentNode.parentNode.lastChild.className = "inputFields";
-        checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(inputForSubtask);
-    }
-    else if (checkboxesCurrent[i].checked === true
-      && checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.tagName != "INPUT") {
-      const inputForSubtask = document.createElement("input");
-      checkboxesCurrent[i].parentNode.parentNode.lastChild.insertBefore(inputForSubtask, checkboxesCurrent[i].parentNode.parentNode.lastChild.childNodes[0]);
+        lastColumn.className = "inputFields";
+        lastColumn.appendChild(inputForSubtask);
+      } else if (lastColumn.childNodes.length > 0) {
+        // prevent input field duplication
+        if (lastColumn.firstChild.tagName != "INPUT") {
+          const inputForSubtask = document.createElement("input");
+          lastColumn.insertBefore(inputForSubtask, lastColumn.childNodes[0]);
+        }
+      }
     }
   }
 
@@ -477,26 +498,32 @@ const saveSubtask = () => {
 
     for (let i = 0; i < checkboxesCurrent.length; i++) {
       if (checkboxesCurrent[i].checked === true) {
-        if (checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.value.length > 0) {
+        if (checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.firstChild.value.length > 0) {
           if (!tasks.list[i].subtasks) {
             tasks.list[i].subtasks = [];
           }
 
           tasks.list[i].subtasks.push({
-            subtaskName: checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild.value,
+            subtaskName: checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.firstChild.value,
             subtaskDateOfCreation: getDate()
           });
           // save updated tasks to the local storage
           localStorage.setItem('myTasks', JSON.stringify(tasks));
 
           // after getting data from the input filed remove it
-          checkboxesCurrent[i].parentNode.parentNode.lastChild.removeChild(checkboxesCurrent[i].parentNode.parentNode.lastChild.firstChild);
+          checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.removeChild(checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.firstChild);
 
           // display subtasks on the screen
           const row = document.createElement('tr');
-          row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td> <td> <input type="checkbox" class="subtasksCheckbox"> </td>`;
+          row.innerHTML += `<td> ${tasks.list[i].subtasks[tasks.list[i].subtasks.length-1].subtaskName} </td>
+                            <td>
+                            <label class="container">
+                            <input type="checkbox" class="subtasksCheckbox">
+                            <span class="checkmark"></span>
+                            </label>
+                            </td>`;
           row.className  = "subtask";
-          checkboxesCurrent[i].parentNode.parentNode.lastChild.appendChild(row);
+          checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.appendChild(row);
         } else {
           showWarning('You cannot create a subtask with no name!');
         }
