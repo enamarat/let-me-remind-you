@@ -15,23 +15,18 @@ body {
 }
 
 .panel {
-  text-align: left;
+  width: 10%;
+  min-width: 240px;
   min-height: 100vh;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
+  text-align: center;
   padding-top: 30px;
   background-color: #000;
 }
 
 .list {
+  width: 90%;
   display: flex;
   justify-content: center;
-  width: 100%;
-  margin-left: 250px;
 }
 
 .wrap {
@@ -200,19 +195,36 @@ h1 {
 
 /*** queries ***/
 @media screen and (max-width: 768px) {
+  /** general layout **/
+  body {
+    flex-direction: column;
+  }
+
   .panel {
-    width: 8rem;
+    width: 100%;
+    min-height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
   }
 
   .list {
-    margin-left: 8rem;
+    width: 100%;
+    margin-top: 16.5rem;
+  }
+
+  .panel div {
+    width: auto;
   }
 
   #add_task_input_div {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
 
+  /** elements **/
   #add_task_input {
     margin-bottom: 0.7rem;
     width: 97%;

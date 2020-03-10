@@ -532,3 +532,15 @@ const saveSubtask = () => {
 }
 
 document.getElementById("saveSubtask").addEventListener("click", saveSubtask);
+
+  // hide subtasks
+  /*const hideSubtasks = () => {
+    hideWarning();
+    let checkboxesCurrent = document.querySelectorAll(".current");
+
+    for (let i = 0; i < checkboxesCurrent.length; i++) {
+      if (checkboxesCurrent[i].checked === true) {
+        console.log(checkboxesCurrent[i].parentNode);
+      }
+    }
+  }*/
