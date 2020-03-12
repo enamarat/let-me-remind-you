@@ -211,7 +211,7 @@ h1 {
 
   .list {
     width: 100%;
-    margin-top: 16.5rem;
+    margin-top: 17rem;
   }
 
   .panel div {
@@ -232,7 +232,7 @@ h1 {
   #add_task_input {
     margin-bottom: 0.7rem;
     width: 97%;
-    }
+  }
 
   button {
     font-size: 0.9rem;
