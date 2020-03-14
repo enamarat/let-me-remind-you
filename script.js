@@ -60,17 +60,23 @@ const checkLocalStorage = () => {
 
       // if a task has subtasks, display them
       if (savedValues.list[i].subtasks) {
-        for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
-          const tableRow = document.createElement('tr');
-          tableRow.className = "subtask";
-          tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td>
-                              <td>
-                              <label class="container">
-                              <input type="checkbox" class="subtasksCheckbox">
-                              <span class="checkmark"></span>
-                              </label>
-                              </td>`;
-          row.lastChild.appendChild(tableRow);
+        if (savedValues.list[i].subtasksHidden === true) {
+          const p = document.createElement("p");
+          p.textContent = "Subtasks are hidden";
+          row.lastChild.appendChild(p);
+        } else if (savedValues.list[i].subtasksHidden === false) {
+          for (let j = 0; j < savedValues.list[i].subtasks.length; j++) {
+            const tableRow = document.createElement('tr');
+            tableRow.className = "subtask";
+            tableRow.innerHTML += `<td>${savedValues.list[i].subtasks[j].subtaskName} </td>
+                                <td>
+                                <label class="container">
+                                <input type="checkbox" class="subtasksCheckbox">
+                                <span class="checkmark"></span>
+                                </label>
+                                </td>`;
+            row.lastChild.appendChild(tableRow);
+          }
         }
 
         // display subtasks marked as completed
@@ -150,7 +156,6 @@ const addTask = () => {
   const input = document.getElementById("add_task_input");
   const list = document.querySelector(".tasks");
   let tableContent = null;
-
   const row = document.createElement('tr');
   // if no data are entered in the input field, show a warning
   if (input.value.length === 0) {
@@ -208,7 +213,7 @@ const deleteTask = () => {
     const checkboxesSubtasks = lastColumn.querySelectorAll(".subtasksCheckbox");
       for (let j = 0; j < checkboxesSubtasks.length; j++) {
         if (checkboxesSubtasks[j].checked === true) {
-         /* Determine from which tasks to delete a subtask depending on a checkbox position. Checkboxes of current tasks
+         /* Determine from which task to delete a subtask depending on a checkbox position. Checkboxes of current tasks
          are in the same order as the tasks in the array */
          let localCheckbox = checkboxesSubtasks[j].parentNode.parentNode.parentNode.parentNode.parentNode.firstChild.nextSibling.firstChild.firstChild.nextSibling;
          const checkboxesArray = Array.from(checkboxes);
@@ -501,6 +506,7 @@ const saveSubtask = () => {
         if (checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild.firstChild.value.length > 0) {
           if (!tasks.list[i].subtasks) {
             tasks.list[i].subtasks = [];
+            tasks.list[i].subtasksHidden = false;
           }
 
           tasks.list[i].subtasks.push({
@@ -534,13 +540,54 @@ const saveSubtask = () => {
 document.getElementById("saveSubtask").addEventListener("click", saveSubtask);
 
   // hide subtasks
-  /*const hideSubtasks = () => {
+  const hideSubtasks = () => {
     hideWarning();
     let checkboxesCurrent = document.querySelectorAll(".current");
 
     for (let i = 0; i < checkboxesCurrent.length; i++) {
       if (checkboxesCurrent[i].checked === true) {
-        console.log(checkboxesCurrent[i].parentNode);
+        const lastColumn = checkboxesCurrent[i].parentNode.parentNode.parentNode.lastChild;
+
+        if (lastColumn.childNodes.length > 0) {
+          if (tasks.list[i].subtasksHidden === false) {
+            for (let j = 0; j < lastColumn.childNodes.length; j++) {
+              lastColumn.childNodes[j].style.display = "none";
+            }
+            const p = document.createElement("p");
+            p.textContent = "Subtasks are hidden";
+            lastColumn.appendChild(p);
+            // save a record about hidden subtasks to the localStorage
+            tasks.list[i].subtasksHidden = true;
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+          } else if (tasks.list[i].subtasksHidden === true) {
+
+            if (lastColumn.firstChild.tagName == "P") {
+              lastColumn.removeChild(lastColumn.lastChild);
+                for (let j = 0; j < tasks.list[i].subtasks.length; j++) {
+                  const row = document.createElement("tr");
+                  row.className = "subtask";
+                  row.innerHTML += `<td>${tasks.list[i].subtasks[j].subtaskName} </td>
+                                      <td>
+                                      <label class="container">
+                                      <input type="checkbox" class="subtasksCheckbox">
+                                      <span class="checkmark"></span>
+                                      </label>
+                                      </td>`;
+                  lastColumn.appendChild(row);
+                }
+            } else {
+              lastColumn.removeChild(lastColumn.lastChild);
+              for (let j = 0; j < lastColumn.childNodes.length; j++) {
+                lastColumn.childNodes[j].style.display = "block";
+              }
+            }
+            // save a record about hidden subtasks to the localStorage
+            tasks.list[i].subtasksHidden = false;
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+          }
+        }
       }
     }
-  }*/
+  }
+
+document.getElementById("hide-or-show-subtasks").addEventListener("click", hideSubtasks);
