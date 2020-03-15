@@ -114,6 +114,11 @@ td {
   border-top: 2px solid white;
 }
 
+/*** elements ***/
+#title-mobile {
+  display: none;
+}
+
 /*** warnings ***/
 #message {
   width: 100%;
@@ -227,6 +232,18 @@ h1 {
   /** elements **/
   h1 {
     display: none;
+  }
+
+  .panel {
+    padding-top: 0;
+  }
+
+  #title-mobile {
+    display: block;
+    padding: 0;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
   }
 
   #add_task_input {
