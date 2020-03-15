@@ -211,7 +211,7 @@ h1 {
 
   .list {
     width: 100%;
-    margin-top: 18rem;
+    margin-top: 17rem;
   }
 
   .panel div {
@@ -238,6 +238,11 @@ h1 {
     font-size: 0.9rem;
     margin: 0;
     margin-bottom: 0.3rem;
+  }
+
+  #select-all-current,
+  #select-all-completed {
+    display: none;
   }
 
 }
